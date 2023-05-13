@@ -23,6 +23,7 @@ setUser({...user,[e.target.name]: e.target.value});
     };
 
     const onSubmit=async (e)=>{
+        alert(user.age)
         e.preventDefault();
         await axios.post("http://localhost:8080/user",user)
         navigate("/");

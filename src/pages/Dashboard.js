@@ -1,11 +1,25 @@
 import React from 'react';
+import "../UI/Exercise";
+import Aos from 'aos';
+import '../pages/Dashboard.css'
+import Exercise from '../UI/Exercise';
+import Footer from '../UI/Footer';
+import Hero from '../UI/Hero';
+import Testimonials from '../UI/Testimonials';
+import { useEffect } from 'react'
 
-const Dashboard = () => {
+function Dashboard() {
+  useEffect(() => {
+    Aos.init()
+  }, [])
   return (
-    <div>
-      <h1>Welcome to your dashboard!</h1>
-      <p>There's nothing here yet.</p>
-    </div>
+    <>
+    <Hero />
+    <Exercise/>
+    <Testimonials />
+    <Footer/>
+
+    </>
   );
 };
 
