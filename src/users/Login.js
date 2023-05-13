@@ -1,14 +1,28 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useCallback } from 'react';
 
 const Login = () => {
+  
   let navigate = useNavigate();
-
   const [user, setUser] = useState({
     emailID: "",
     password: "",
   });
+
+  const [dbData,setdbData]=useState([]);
+
+  const fetchData = async()=>{
+    const res=await axios.get("http://localhost:8081/users");
+      console.log(res['data']);
+      setdbData(res['data']);
+  }
+  
+
+  useEffect(()=>{
+      fetchData();
+  },[]);
 
   const { emailID, password } = user;
 
@@ -18,12 +32,12 @@ const Login = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:8080/login", user);
-      localStorage.setItem("token", response.data.token);
-      navigate("/Dashboard");
-    } catch (error) {
-      console.log(error);
+    console.log(user,dbData);
+    for(let i=0;i<dbData.length;i++){
+      console.log(dbData[i]['email'],user['emailID'],dbData[i]['password'],user['password']);
+      if(dbData[i]['email']==user['emailID'] && dbData[i]['password']==user['password']){
+        navigate('/Dashboard');
+      }
     }
   };
 
