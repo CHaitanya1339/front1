@@ -86,6 +86,12 @@ const Header = () => {
               <i class='ri-menu-line'></i>
             </span>
           </div>
+          <div className='nav_right'>
+            <Link className='btn btn-primary' to='/Userdash'>Userdash</Link>
+            <span className='mobile_menu'>
+              <i class='ri-menu-line'></i>
+            </span>
+          </div>
         </div>
       </div>
     </header>
