@@ -57,12 +57,15 @@ const Header = () => {
         <div className='nav_wrapper'>
           {/* ==== LOGO ==== */}
 
+          <Link className="btn mx-2" to="/">
+            
           <div className='logo'>
             <div className='logo_img'>
               <img src={logo} alt='' />
             </div>
             <h2>FitBody</h2>
           </div>
+          </Link>
 
           {/* ====== Navigation menu ======= */}
 
