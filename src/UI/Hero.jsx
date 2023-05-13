@@ -2,6 +2,7 @@ import React from 'react'
 import heroImg from '../assets/img/gym-02.png'
 import dumbleIcon from '../assets/img/dumble.png'
 import '../../src/style/Hero.css'
+import { Link } from 'react-router-dom'
 
 const Hero = () => {
   return (
@@ -35,7 +36,7 @@ const Hero = () => {
               data-aos-delay='200'
               data-aos-duration='2000'
             >
-              <button className='btn btn-primary'>Register</button>
+              <Link className='btn btn-primary' to='/Register'>Register</Link>
 
             </div>
           </div>
