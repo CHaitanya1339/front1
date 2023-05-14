@@ -3,6 +3,9 @@ import '../style/header.css'
 import logo from '../assets/img/dumble.png'
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 
 const Navbar = () => {
   const headerRef = useRef(null)
@@ -27,6 +30,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
+    toast("Successfully Logged Out")
     navigate('/');
     // redirect to login page or homepage
   }
@@ -63,15 +67,22 @@ const Navbar = () => {
             </span>
           </div>
           <div className='nav_right'>
-            <Link className='btn' to='/workout-plan-creator'>Workout Plan Creator</Link>
+            <Link className='btn' to='/WorkoutForm'>Workout Plan Creator</Link>
             <span className='mobile_menu'>
               <i class='ri-menu-line'></i>
             </span>
           </div>
           <div className='nav_right'>
-            <Link className='btn' >Profile</Link>
-            <button className='btn' onClick={handleLogout}>Logout</button>
+            <Link className='btn' to='/UpdateProfile'>Update Profile</Link>
             <span className='mobile_menu'>
+              <i class='ri-menu-line'></i>
+            </span>
+          </div>
+          <div className='nav_right'>
+            <button className='btn' onClick={handleLogout}>Logout</button>
+            <ToastContainer>
+              </ToastContainer>          
+              <span className='mobile_menu'>
               <i class='ri-menu-line'></i>
             </span>
           </div>

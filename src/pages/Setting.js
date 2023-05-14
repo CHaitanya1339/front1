@@ -1,8 +1,14 @@
 import React from 'react'
-
+import Navbar from '../layout/Navbar'
 const Setting = () => {
   return (
-    <div>Setting</div>
+    <div>
+      <header>
+        <Navbar />
+      </header>
+      Setting
+    </div>
+    
   )
 }
 

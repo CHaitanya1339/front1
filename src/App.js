@@ -9,6 +9,9 @@ import Tracking from './pages/Tracking';
 import Setting from './pages/Setting';
 import Creator from './pages/Creator';
 import UserDashboard from './pages/UserDashboard';
+import UpdateProfile from './pages/Updateprofile';
+import Workoutform from './pages/WorkoutForm';
+
 
 function App() {
   return (
@@ -20,11 +23,14 @@ function App() {
           <Route exact path='/Login' element={<Login />} />
           <Route exact path='/Register' element={<Register />} />
           <Route exact path='/Dashboard' element={<Dashboard />} />
+          <Route exact path='/UpdateProfile' element={<UpdateProfile/>}/>
+          <Route exact path='/WorkoutForm' element={<Workoutform/>}/>
           <Route exact path='/workout-history' element={<History />} />
           <Route exact path='/exercise-tracking' element={<Tracking />} />
           <Route exact path='/goal-setting' element={<Setting />} />
           <Route exact path='/workout-plan-creator' element={<Creator />} />
           <Route exact path='/user-dashboard' element={<UserDashboard />} />
+          
         </Routes>
       </Router>
     </div>

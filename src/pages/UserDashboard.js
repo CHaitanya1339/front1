@@ -3,10 +3,8 @@ import Navbar from '../layout/Navbar';
 
 
 
-const UserDashboard = ( ) => {
-
+const UserDashboard = () => {
   const [greeting, setGreeting] = useState('');
-
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
@@ -29,7 +27,6 @@ const UserDashboard = ( ) => {
       <h2>
         {greeting}, {user.name}!
       </h2>
-      <p>Hello!</p>
     </div>
   );
 };
