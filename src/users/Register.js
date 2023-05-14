@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
+import Header from '../layout/Header';
 
 const Register = () => {
 
@@ -8,7 +9,7 @@ const Register = () => {
 
     const [user, setUser] = useState({
       name: "",
-      emailID: "",
+      email: "",
       password: "",
       height: "",
       weight: "",
@@ -16,19 +17,22 @@ const Register = () => {
       gender: "",
     });
 
-    const{name,emailID}=user
+    const{name,email}=user
 
     const onInputChange=(e)=>{
 setUser({...user,[e.target.name]: e.target.value});
     };
 
     const onSubmit=async (e)=>{
-        alert(user.age)
+        alert("User is Succesfully Registered")
         e.preventDefault();
-        await axios.post("http://localhost:8080/user",user)
-        navigate("/");
+        await axios.post("http://localhost:8081/users",user)
+        navigate("/Login") ;
     }
   return (
+    <div>
+      <Header/>
+    
     <div className='container'>
       <div className="row">
         <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
@@ -58,8 +62,8 @@ setUser({...user,[e.target.name]: e.target.value});
               type={"text"}
                 className="form-control"
                 placeholder="Enter your Email Address"
-                name="emailID"
-                value={emailID}
+                name="email"
+                value={email}
                 onChange={(e)=>onInputChange(e)}
                 />
                 </div>
@@ -151,7 +155,7 @@ setUser({...user,[e.target.name]: e.target.value});
                 </div>
                 </div>
         </div>
-
+</div>
   )
 }
 

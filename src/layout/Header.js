@@ -4,6 +4,7 @@ import logo from '../assets/img/dumble.png'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
+
 const nav_links = [
   {
     path: '#home',
@@ -85,12 +86,6 @@ const Header = () => {
 
           <div className='nav_right'>
             <Link className='btn btn-primary' to='/Login'>Login</Link>
-            <span className='mobile_menu'>
-              <i class='ri-menu-line'></i>
-            </span>
-          </div>
-          <div className='nav_right'>
-            <Link className='btn btn-primary' to='/Userdash'>Userdash</Link>
             <span className='mobile_menu'>
               <i class='ri-menu-line'></i>
             </span>

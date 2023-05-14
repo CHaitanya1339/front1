@@ -7,6 +7,8 @@ import Footer from '../UI/Footer';
 import Hero from '../UI/Hero';
 import Testimonials from '../UI/Testimonials';
 import { useEffect } from 'react'
+import Header from '../layout/Header';
+
 
 function Dashboard() {
   useEffect(() => {
@@ -14,6 +16,7 @@ function Dashboard() {
   }, [])
   return (
     <>
+    <Header/>
     <Hero />
     <Exercise/>
     <Testimonials />
