@@ -23,8 +23,8 @@ const WorkoutForm = () => {
 
     try {
 
-      const response = await axios.post(`/api/users/${id}/workouts`, workout);
-      console.log(response.data); // Handle the response as needed
+      const response = await axios.post(`http://localhost:8081/users/${id}/workouts`, workout);
+      console.log(response); // Handle the response as needed
       setWorkout({
         user_id: id,
         id: '',
