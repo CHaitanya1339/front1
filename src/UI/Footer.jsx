@@ -27,7 +27,7 @@ const Footer = () => {
         </div>
 
         <p className='copyright'>
-          Copyright - {year} developed by <a href='#'>Virtusa.</a> All rights
+          Copyright - {year} developed by Virtusa. All rights
           reserved.
         </p>
       </div>
