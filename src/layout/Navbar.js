@@ -3,7 +3,7 @@ import '../style/header.css'
 import logo from '../assets/img/dumble.png'
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 
@@ -36,6 +36,7 @@ const Navbar = () => {
   }
 
   return (
+    <>
     <header className='header' ref={headerRef}>
       <div className='container'>
         <div className='nav_wrapper'>
@@ -79,9 +80,7 @@ const Navbar = () => {
             </span>
           </div>
           <div className='nav_right'>
-            <button className='btn' onClick={handleLogout}>Logout</button>
-            <ToastContainer>
-              </ToastContainer>          
+            <button className='btn' onClick={handleLogout}>Logout</button>        
               <span className='mobile_menu'>
               <i class='ri-menu-line'></i>
             </span>
@@ -89,6 +88,8 @@ const Navbar = () => {
         </div>
       </div>
     </header>
+    <ToastContainer />
+    </>
   )
 }
 
