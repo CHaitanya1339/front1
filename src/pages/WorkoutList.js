@@ -10,6 +10,8 @@ const WorkoutList = () => {
   const [exerciseName, setExerciseName] = useState('');
   const [exerciseDescription, setExerciseDescription] = useState('');
   const user = JSON.parse(localStorage.getItem('user'));
+  const [exerciseName, setExerciseName] = useState('');
+  const [exerciseSets, setExerciseSets] = useState('');
   const userId = user.id;
 
   useEffect(() => {
@@ -27,11 +29,36 @@ const WorkoutList = () => {
 
   const handleAddExercise = (workout) => {
     setSelectedWorkout(workout);
+    setExerciseName('');
+    setExerciseSets('');
     setShowModal(true);
   };
 
+
   const handleExerciseNameChange = (event) => {
     setExerciseName(event.target.value);
+=======
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    
+    try {
+      const response = await axios.post(
+        `http://localhost:8081/workouts/${selectedWorkout.id}/exercises`,
+        {
+          name: exerciseName,
+          sets: exerciseSets,
+        }
+      );
+
+      console.log('Exercise added:', response.data);
+
+      setSelectedWorkout(null);
+      setShowModal(false);
+      event.target.reset();
+    } catch (error) {
+      console.error('Error adding exercise:', error);
+    }
+>>>>>>> 4044e44c44d924a0a3f8dc9c5cc40f5ac6d55b07
   };
 
   const handleExerciseDescriptionChange = (event) => {
@@ -142,6 +169,25 @@ const WorkoutList = () => {
             <Form.Group controlId='exerciseDescription'>
               <Form.Label>Exercise Description</Form.Label>
               <Form.Control as='textarea' rows={3} value={exerciseDescription} onChange={handleExerciseDescriptionChange} required />
+=======
+              <Form.Control
+                type="text"
+                name="exerciseName"
+                value={exerciseName}
+                onChange={(e) => setExerciseName(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="exerciseSets">
+              <Form.Label>Number of Sets</Form.Label>
+              <Form.Control
+                type="number"
+                name="exerciseSets"
+                value={exerciseSets}
+                onChange={(e) => setExerciseSets(e.target.value)}
+                required
+              />
+>>>>>>> 4044e44c44d924a0a3f8dc9c5cc40f5ac6d55b07
             </Form.Group>
             <Button variant='primary' type='submit'>
               Add Exercise
