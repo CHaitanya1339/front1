@@ -7,6 +7,8 @@ const WorkoutList = () => {
   const [workouts, setWorkouts] = useState([]);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [exerciseName, setExerciseName] = useState('');
+  const [exerciseDescription, setExerciseDescription] = useState('');
   const user = JSON.parse(localStorage.getItem('user'));
   const userId = user.id;
 
@@ -23,29 +25,45 @@ const WorkoutList = () => {
     fetchWorkouts();
   }, [userId]);
 
-
   const handleAddExercise = (workout) => {
     setSelectedWorkout(workout);
     setShowModal(true);
   };
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    
-    const exerciseName = event.target.elements.exerciseName.value;
-    const exerciseSets = event.target.elements.exerciseSets.value;
-    
-    console.log('Exercise Name:', exerciseName);
-    console.log('Number of Sets:', exerciseSets);
-
-    setSelectedWorkout(null);
-    setShowModal(false);
-    event.target.reset();
+  const handleExerciseNameChange = (event) => {
+    setExerciseName(event.target.value);
   };
-  
+
+  const handleExerciseDescriptionChange = (event) => {
+    setExerciseDescription(event.target.value);
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    alert("Exercise Added!")
+
+    const exercise = {
+      workoutId: selectedWorkout.id,
+      name: exerciseName,
+      description: exerciseDescription
+    };
+
+    try {
+      await axios.post(`http://localhost:8081/workouts/${selectedWorkout.id}/exercises`, exercise);
+      setSelectedWorkout(null);
+      setShowModal(false);
+      setExerciseName('');
+      setExerciseDescription('');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleCloseModal = () => {
     setSelectedWorkout(null);
     setShowModal(false);
+    setExerciseName('');
+    setExerciseDescription('');
   };
 
   return (
@@ -89,15 +107,43 @@ const WorkoutList = () => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleFormSubmit}>
-            <Form.Group controlId="exerciseName">
+            <Form.Group controlId='exerciseName'>
               <Form.Label>Exercise Name</Form.Label>
-              <Form.Control type="text" name="exerciseName" required />
+              <Form.Control as='select' value={exerciseName} onChange={handleExerciseNameChange} required>
+                <option value=''>Select Exercise</option>
+                {selectedWorkout && (
+                  <>
+                    {selectedWorkout.notes === 'Outdoor Activities' && (
+                      <>
+                        <option value='Hiking'>Hiking</option>
+                        <option value='Swimming'>Swimming</option>
+                        <option value='Rock Climbing'>Rock Climbing</option>
+                        <option value='Kayaking/Canoeing'>Kayaking/Canoeing</option>
+                        <option value='Stand-up Paddleboarding (SUP)'>Stand-up Paddleboarding (SUP)</option>
+                        <option value='Tennis'>Tennis</option>
+                        <option value='Soccer'>Soccer</option>
+                      </>
+                    )}
+                    {selectedWorkout.notes === 'Cardiovascular Workouts' && (
+                      <>
+                        <option value='Running/Jogging on a Treadmill or Outdoors'>Running/Jogging on a Treadmill or Outdoors</option>
+                        <option value='Cycling (Indoor or Outdoor)'>Cycling (Indoor or Outdoor)</option>
+                        <option value='Jumping Rope'>Jumping Rope</option>
+                        <option value='High-Intensity Interval Training (HIIT)'>High-Intensity Interval Training (HIIT)</option>
+                        <option value='Stair Climbing'>Stair Climbing</option>
+                        <option value='Rowing'>Rowing</option>
+                      </>
+                    )}
+                    {/* Add other workout categories here */}
+                  </>
+                )}
+              </Form.Control>
             </Form.Group>
-            <Form.Group controlId="exerciseSets">
-              <Form.Label>Number of Sets</Form.Label>
-              <Form.Control type="number" name="exerciseSets" required />
+            <Form.Group controlId='exerciseDescription'>
+              <Form.Label>Exercise Description</Form.Label>
+              <Form.Control as='textarea' rows={3} value={exerciseDescription} onChange={handleExerciseDescriptionChange} required />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant='primary' type='submit'>
               Add Exercise
             </Button>
           </Form>
