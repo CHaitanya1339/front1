@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../layout/Navbar';
 import axios from 'axios';
 import './History.css';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 const History = () => {
   const [workoutData, setWorkoutData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showExerciseForm, setShowExerciseForm] = useState(false);
-  const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
   const [exerciseName, setExerciseName] = useState('');
-  const [exerciseSets, setExerciseSets] = useState('');
-  const [setError] = useState('');
+  const [selectedWorkout, setSelectedWorkout] = useState(null);
+  const [exerciseDescription, setExerciseDescription] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -40,6 +41,8 @@ const History = () => {
     setSelectedDate(new Date(e.target.value));
   };
 
+  
+
   const handleDeleteWorkout = (id) => {
     axios
       .delete(`http://localhost:8081/workouts/${id}`)
@@ -50,43 +53,45 @@ const History = () => {
       .catch((err) => console.log(err));
   };
 
-  const handleAddExercise = (workoutId) => {
-    setSelectedWorkoutId(workoutId);
-    setShowExerciseForm(true);
+  const handleAddExercise = (workout) => {
+    setSelectedWorkout(workout);
+    setShowModal(true);
   };
 
-  const handleExerciseFormClose = () => {
-    setShowExerciseForm(false);
-    setExerciseName('');
-    setExerciseSets('');
-    setError('');
-  };
 
-  const handleExerciseFormSubmit = (e) => {
-    e.preventDefault();
-    if (!exerciseName || !exerciseSets) {
-      setError('Please enter exercise name and sets.');
-      return;
-    }
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
     const exercise = {
+      workoutId: selectedWorkout.id,
       name: exerciseName,
-      sets: exerciseSets,
+      description: exerciseDescription
     };
-    const updatedWorkoutData = workoutData.map((item) => {
-      if (item.id === selectedWorkoutId) {
-        return {
-          ...item,
-          exercises: [...(item.exercises || []), exercise],
-        };
-      }
-      return item;
-    });
-    setWorkoutData(updatedWorkoutData);
-    setSelectedWorkoutId(null);
-    setShowExerciseForm(false);
+
+    try {
+      await axios.post(`http://localhost:8081/workouts/${selectedWorkout.id}/exercises`, exercise);
+      setSelectedWorkout(null);
+      setShowModal(false);
+      setExerciseName('');
+      setExerciseDescription('');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleExerciseNameChange = (event) => {
+    setExerciseName(event.target.value);
+  };
+
+  const handleExerciseDescriptionChange = (event) => {
+    setExerciseDescription(event.target.value);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedWorkout(null);
+    setShowModal(false);
     setExerciseName('');
-    setExerciseSets('');
-    setError('');
+    setExerciseDescription('');
   };
 
   return (
@@ -165,51 +170,54 @@ const History = () => {
         </div>
       </div>
 
-      {showExerciseForm && (
-        <div className="container mt-4">
-          <div className="row">
-            <div className="col-md-6 offset-md-3 border rounded p-4 shadow">
-              <h2 className="text-center mb-4">Add Exercise</h2>
-              <form onSubmit={handleExerciseFormSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="exerciseName" className="form-label">
-                    Exercise Name
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="exerciseName"
-                    name="exerciseName"
-                    value={exerciseName}
-                    onChange={(e) => setExerciseName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="exerciseSets" className="form-label">
-                    Sets
-                  </label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="exerciseSets"
-                    name="exerciseSets"
-                    value={exerciseSets}
-                    onChange={(e) => setExerciseSets(e.target.value)}
-                    required
-                  />
-                </div>
-                <button className="btn btn-secondary ml-2" onClick={handleExerciseFormClose}>
-                  Close
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Submit
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Exercise to {selectedWorkout && selectedWorkout.notes}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleFormSubmit}>
+            <Form.Group controlId='exerciseName'>
+              <Form.Label>Exercise Name</Form.Label>
+              <Form.Control as='select' value={exerciseName} onChange={handleExerciseNameChange} required>
+                <option value=''>Select Exercise</option>
+                {selectedWorkout && (
+                  <>
+                    {selectedWorkout.notes === 'Outdoor Activities' && (
+                      <>
+                        <option value='Hiking'>Hiking</option>
+                        <option value='Swimming'>Swimming</option>
+                        <option value='Rock Climbing'>Rock Climbing</option>
+                        <option value='Kayaking/Canoeing'>Kayaking/Canoeing</option>
+                        <option value='Stand-up Paddleboarding (SUP)'>Stand-up Paddleboarding (SUP)</option>
+                        <option value='Tennis'>Tennis</option>
+                        <option value='Soccer'>Soccer</option>
+                      </>
+                    )}
+                    {selectedWorkout.notes === 'Cardiovascular Workouts' && (
+                      <>
+                        <option value='Running/Jogging on a Treadmill or Outdoors'>Running/Jogging on a Treadmill or Outdoors</option>
+                        <option value='Cycling (Indoor or Outdoor)'>Cycling (Indoor or Outdoor)</option>
+                        <option value='Jumping Rope'>Jumping Rope</option>
+                        <option value='High-Intensity Interval Training (HIIT)'>High-Intensity Interval Training (HIIT)</option>
+                        <option value='Stair Climbing'>Stair Climbing</option>
+                        <option value='Rowing'>Rowing</option>
+                      </>
+                    )}
+                    {/* Add other workout categories here */}
+                  </>
+                )}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId='exerciseDescription'>
+              <Form.Label>Exercise Description</Form.Label>
+              <Form.Control as='textarea' rows={3} value={exerciseDescription} onChange={handleExerciseDescriptionChange} required />
+            </Form.Group>
+            <Button variant='primary' type='submit'>
+              Add Exercise
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
