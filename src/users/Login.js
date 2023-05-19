@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../layout/Header';
 import "../style/login.css"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Login = () => {
@@ -13,8 +15,10 @@ const Login = () => {
     emailID: "",
     password: "",
   });
+  
 
   const [dbData, setdbData] = useState([]);
+  const notify = () => toast("Login Sucessful!");
 
   const fetchData = async () => {
     const res = await axios.get("http://localhost:8081/users");
@@ -42,6 +46,7 @@ const Login = () => {
       if (dbData[i]['email'] === user['emailID'] && dbData[i]['password'] === user['password']) {
         // Store user information in local storage
         localStorage.setItem('user', JSON.stringify(dbData[i]));
+        notify();
         navigate('/user-dashboard');
         found = true;
         break;
@@ -52,7 +57,7 @@ const Login = () => {
     }
   };
 
-
+ 
 
   return (
     <div><Header />
@@ -106,6 +111,7 @@ const Login = () => {
               <div className='msg' id="msg" hidden>
                   Incorrect Email or Password
                 </div>
+                <ToastContainer />
             </form>
           </div>
         </div>

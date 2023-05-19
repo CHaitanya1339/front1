@@ -11,6 +11,8 @@ import Creator from './pages/Creator';
 import UserDashboard from './pages/UserDashboard';
 import UpdateProfile from './pages/Updateprofile';
 import Workoutform from './pages/WorkoutForm';
+import WorkoutList from './pages/WorkoutList';
+import AddExerciseForm from './pages/AddExerciseForm';
 
 
 function App() {
@@ -30,6 +32,8 @@ function App() {
           <Route exact path='/goal-setting' element={<Setting />} />
           <Route exact path='/workout-plan-creator' element={<Creator />} />
           <Route exact path='/user-dashboard' element={<UserDashboard />} />
+          <Route exact path='/add-exercises' element={<WorkoutList />} />
+          <Route exact path="/add-exercise/:workoutId" component={<AddExerciseForm/>} />
           
         </Routes>
       </Router>

@@ -35,7 +35,7 @@ export default function Testimonials() {
 
                 <h4>Jane, 28</h4>
                 <p>
-                Fitbody has been a game-changer for me.
+                SweatSync has been a game-changer for me.
                  I've never been so motivated to exercise and track my progress. 
                  The personalized workout plans and nutrition recommendations have made all the difference!
                 </p>
@@ -50,7 +50,7 @@ export default function Testimonials() {
 
                 <h4>John, 26</h4>
                 <p>
-                I've been using Fitbody for a few months now and have already seen a significant improvement in my overall fitness level.
+                I've been using SweatSync for a few months now and have already seen a significant improvement in my overall fitness level.
                  The charts and graphs have been a huge help in keeping me on track and motivated.
                 </p>
               </div>
@@ -64,7 +64,7 @@ export default function Testimonials() {
 
                 <h4>Jessica, 29</h4>
                 <p>
-                Fitbody has made it so easy for me to create and stick to a workout plan. 
+                SweatSync has made it so easy for me to create and stick to a workout plan. 
                 The customization options have allowed me to tailor my plan to my specific needs and preferences.
                 </p>
               </div>

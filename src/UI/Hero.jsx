@@ -20,7 +20,7 @@ const Hero = () => {
               Lifestyle
             </h2>
             <p data-aos='fade-up' data-aos-delay='100' data-aos-duration='1800'>
-            "Fitbody" is a fitness tracking portal that provides a centralized platform <br />for 
+            "SweatSync" is a fitness tracking portal that provides a centralized platform <br />for 
             individuals to track their fitness and wellness progress, 
             
             set fitness goals,<br />
@@ -64,19 +64,6 @@ const Hero = () => {
                   <i class='ri-heart-pulse-fill'></i>
                 </span>
                 <h5>2567 BPM</h5>
-              </div>
-
-              <div
-                className='gym_location'
-                data-aos='fade-left'
-                data-aos-duration='1500'
-              >
-                <span>
-                  <i class='ri-map-pin-2-fill'></i>
-                </span>
-                <h5>
-                  Find a new <br /> Gym near you
-                </h5>
               </div>
 
               <div

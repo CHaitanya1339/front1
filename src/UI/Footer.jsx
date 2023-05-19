@@ -12,12 +12,12 @@ const Footer = () => {
             <div className='logo'>
               <div className='logo_img'>
                 <img src={logo} alt='' />
-                <h2>Fitbody</h2>
+                <h2>SweatSync</h2>
               </div>
             </div>
 
             <p>
-            Track your fitness journey and achieve your goals with FitBody.
+            Track your fitness journey and achieve your goals with SweatSync.
             </p>
           </div>
 
