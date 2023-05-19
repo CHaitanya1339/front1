@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import Navbar from '../layout/Navbar';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 const WorkoutList = () => {
   const [workouts, setWorkouts] = useState([]);
+  const [selectedWorkout, setSelectedWorkout] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const user = JSON.parse(localStorage.getItem('user'));
   const userId = user.id;
 
@@ -21,10 +23,29 @@ const WorkoutList = () => {
     fetchWorkouts();
   }, [userId]);
 
-  const navigate = useNavigate();
 
-  const handleAddExercise = (workoutId) => {
-    navigate(`/add-exercise/${workoutId}`);
+  const handleAddExercise = (workout) => {
+    setSelectedWorkout(workout);
+    setShowModal(true);
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    
+    const exerciseName = event.target.elements.exerciseName.value;
+    const exerciseSets = event.target.elements.exerciseSets.value;
+    
+    console.log('Exercise Name:', exerciseName);
+    console.log('Number of Sets:', exerciseSets);
+
+    setSelectedWorkout(null);
+    setShowModal(false);
+    event.target.reset();
+  };
+  
+  const handleCloseModal = () => {
+    setSelectedWorkout(null);
+    setShowModal(false);
   };
 
   return (
@@ -51,7 +72,7 @@ const WorkoutList = () => {
                   <td>
                     <button
                       className='btn btn-primary'
-                      onClick={() => handleAddExercise(workout.id)}
+                      onClick={() => handleAddExercise(workout)}
                     >
                       Add Exercise
                     </button>
@@ -62,6 +83,26 @@ const WorkoutList = () => {
           </table>
         </div>
       </div>
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Exercise to {selectedWorkout && selectedWorkout.notes}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleFormSubmit}>
+            <Form.Group controlId="exerciseName">
+              <Form.Label>Exercise Name</Form.Label>
+              <Form.Control type="text" name="exerciseName" required />
+            </Form.Group>
+            <Form.Group controlId="exerciseSets">
+              <Form.Label>Number of Sets</Form.Label>
+              <Form.Control type="number" name="exerciseSets" required />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Add Exercise
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
