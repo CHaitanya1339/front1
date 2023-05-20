@@ -9,6 +9,13 @@ const WorkoutList = () => {
   const [showModal, setShowModal] = useState(false);
   const [exerciseName, setExerciseName] = useState('');
   const [exerciseDescription, setExerciseDescription] = useState('');
+  const [exercises, setExercises] = useState([]);
+  const [showSetsModal, setShowSetsModal] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState(null);
+  const [sets, setSets] = useState([]);
+  const [reps, setReps] = useState('');
+  const [weight, setWeight] = useState('');
+  const [duration, setDuration] = useState('');
   const user = JSON.parse(localStorage.getItem('user'));
   const userId = user.id;
 
@@ -25,9 +32,26 @@ const WorkoutList = () => {
     fetchWorkouts();
   }, [userId]);
 
-  const handleAddExercise = (workout) => {
-    setSelectedWorkout(workout);
-    setShowModal(true);
+  const handleShowExercises = async (workoutId) => {
+    try {
+      const response = await axios.get(`http://localhost:8081/workouts/${workoutId}/exercises`);
+      setExercises(response.data);
+      setSelectedWorkout(workouts.find((workout) => workout.id === workoutId));
+      setShowModal(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleShowSets = async (exerciseId) => {
+    try {
+      const response = await axios.get(`http://localhost:8081/exercises/${exerciseId}/sets`);
+      setSets(response.data);
+      setSelectedExercise(exercises.find((exercise) => exercise.id === exerciseId));
+      setShowSetsModal(true);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleExerciseNameChange = (event) => {
@@ -36,6 +60,18 @@ const WorkoutList = () => {
 
   const handleExerciseDescriptionChange = (event) => {
     setExerciseDescription(event.target.value);
+  };
+
+  const handleRepsChange = (event) => {
+    setReps(event.target.value);
+  };
+
+  const handleWeightChange = (event) => {
+    setWeight(event.target.value);
+  };
+
+  const handleDurationChange = (event) => {
+    setDuration(event.target.value);
   };
 
   const handleFormSubmit = async (event) => {
@@ -58,11 +94,41 @@ const WorkoutList = () => {
     }
   };
 
+  const handleSetsFormSubmit = async (event) => {
+    event.preventDefault();
+
+    const set = {
+      exerciseId: selectedExercise.id,
+      reps,
+      weight,
+      duration
+    };
+
+    try {
+      await axios.post(`http://localhost:8081/exercises/${selectedExercise.id}/sets`, set);
+      setSelectedExercise(null);
+      setShowSetsModal(false);
+      setReps('');
+      setWeight('');
+      setDuration('');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleCloseModal = () => {
     setSelectedWorkout(null);
     setShowModal(false);
     setExerciseName('');
     setExerciseDescription('');
+  };
+
+  const handleCloseSetsModal = () => {
+    setSelectedExercise(null);
+    setShowSetsModal(false);
+    setReps('');
+    setWeight('');
+    setDuration('');
   };
 
   return (
@@ -78,7 +144,7 @@ const WorkoutList = () => {
               <tr>
                 <th>Workout ID</th>
                 <th>Notes</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -88,10 +154,10 @@ const WorkoutList = () => {
                   <td>{workout.notes}</td>
                   <td>
                     <button
-                      className='btn btn-primary'
-                      onClick={() => handleAddExercise(workout)}
+                      className='btn btn-secondary ml-2'
+                      onClick={() => handleShowExercises(workout.id)}
                     >
-                      Add Exercise
+                      Show Exercises
                     </button>
                   </td>
                 </tr>
@@ -102,13 +168,49 @@ const WorkoutList = () => {
       </div>
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Exercise to {selectedWorkout && selectedWorkout.notes}</Modal.Title>
+          <Modal.Title>
+            {selectedWorkout && `Exercises for ${selectedWorkout.notes}`}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {exercises.length > 0 ? (
+            <table className='table'>
+              <thead>
+                <tr>
+                  <th>Exercise ID</th>
+                  <th>Exercise Name</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {exercises.map((exercise) => (
+                  <tr key={exercise.id}>
+                    <td>{exercise.id}</td>
+                    <td>{exercise.name}</td>
+                    <td>
+                      <button
+                        className='btn btn-secondary ml-2'
+                        onClick={() => handleShowSets(exercise.id)}
+                      >
+                        Add Sets
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No exercises found.</p>
+          )}
           <Form onSubmit={handleFormSubmit}>
             <Form.Group controlId='exerciseName'>
               <Form.Label>Exercise Name</Form.Label>
-              <Form.Control as='select' value={exerciseName} onChange={handleExerciseNameChange} required>
+              <Form.Control
+                as='select'
+                value={exerciseName}
+                onChange={handleExerciseNameChange}
+                required
+              >
                 <option value=''>Select Exercise</option>
                 {selectedWorkout && (
                   <>
@@ -140,10 +242,75 @@ const WorkoutList = () => {
             </Form.Group>
             <Form.Group controlId='exerciseDescription'>
               <Form.Label>Exercise Description</Form.Label>
-              <Form.Control as='textarea' rows={3} value={exerciseDescription} onChange={handleExerciseDescriptionChange} required />
+              <Form.Control
+                as='textarea'
+                rows={3}
+                value={exerciseDescription}
+                onChange={handleExerciseDescriptionChange}
+                required
+              />
             </Form.Group>
             <Button variant='primary' type='submit'>
               Add Exercise
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+      <Modal show={showSetsModal} onHide={handleCloseSetsModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Sets for {selectedExercise && selectedExercise.name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <table className='table'>
+            <thead>
+              <tr>
+                <th>Set ID</th>
+                <th>Reps</th>
+                <th>Weight</th>
+                <th>Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sets.map((set) => (
+                <tr key={set.id}>
+                  <td>{set.id}</td>
+                  <td>{set.reps}</td>
+                  <td>{set.weight}</td>
+                  <td>{set.duration}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Form onSubmit={handleSetsFormSubmit}>
+            <Form.Group controlId='reps'>
+              <Form.Label>Reps</Form.Label>
+              <Form.Control
+                type='number'
+                value={reps}
+                onChange={handleRepsChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId='weight'>
+              <Form.Label>Weight</Form.Label>
+              <Form.Control
+                type='number'
+                value={weight}
+                onChange={handleWeightChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId='duration'>
+              <Form.Label>Duration</Form.Label>
+              <Form.Control
+                type='number'
+                value={duration}
+                onChange={handleDurationChange}
+                required
+              />
+            </Form.Group>
+            <Button variant='primary' type='submit'>
+              Add Set
             </Button>
           </Form>
         </Modal.Body>
