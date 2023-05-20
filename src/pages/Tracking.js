@@ -17,23 +17,9 @@ const Tracking = () => {
       <div className="container">
         <div className="card" data-aos="fade-up">
           <div className="card-body">
-            <h5 className="card-title">Add Your Exercises</h5>
+            <h5 className="card-title">Workout Details</h5>
             <p className="card-text">Start adding your exercises to track your progress.</p>
-            <Link to="/add-exercises" className="btn btn-primary">Add Exercises</Link>
-          </div>
-        </div>
-        <div className="card" data-aos="fade-up">
-          <div className="card-body">
-            <h5 className="card-title">Show Your Exercises</h5>
-            <p className="card-text">View your tracked exercises and analyze your progress.</p>
-            <Link to="/show-exercises" className="btn btn-primary">Show Exercises</Link>
-          </div>
-        </div>
-        <div className="card" data-aos="fade-up">
-          <div className="card-body">
-            <h5 className="card-title">Update Your Exercises</h5>
-            <p className="card-text">Update your tracked exercises and keep your records up to date.</p>
-            <Link to="/update-exercises" className="btn btn-primary">Update Exercises</Link>
+            <Link to="/add-exercises" className="btn btn-primary">Add the remaining details for your Workouts</Link>
           </div>
         </div>
       </div>
@@ -42,3 +28,4 @@ const Tracking = () => {
 };
 
 export default Tracking;
+  
