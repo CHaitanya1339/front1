@@ -75,19 +75,3 @@
     padding: 0 15px;
   }
 
-  /* Button styles */
-  .btn {
-    background-color: var(--primary-color);
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 10px 20px;
-    transition: all 0.3s ease;
-  }
-
-  .btn:hover {
-    background-color: #0d8bf2;
-  }

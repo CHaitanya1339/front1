@@ -53,10 +53,6 @@ const History = () => {
       .catch((err) => console.log(err));
   };
 
-  const handleAddExercise = (workout) => {
-    setSelectedWorkout(workout);
-    setShowModal(true);
-  };
 
 
   const handleFormSubmit = async (event) => {
@@ -151,12 +147,6 @@ const History = () => {
                               onClick={() => handleDeleteWorkout(item.id)}
                             >
                               Delete Workout
-                            </button>
-                            <button
-                              className="btn btn-sm btn-primary"
-                              onClick={() => handleAddExercise(item.id)}
-                            >
-                              Add Exercise
                             </button>
                           </div>
                         </div>

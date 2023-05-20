@@ -235,7 +235,35 @@ const WorkoutList = () => {
                         <option value='Rowing'>Rowing</option>
                       </>
                     )}
-                    {/* Add other workout categories here */}
+                    {selectedWorkout.notes === 'Strength Training' && ( 
+                      <>
+                        <option value='Weightlifting'>Weightlifting</option>
+                        <option value='Bodyweight Exercises'>Bodyweight Exercises</option>
+                        <option value='Resistance Band Exercises'>Resistance Band Exercises</option>
+                        <option value='Kettlebell workouts'>Kettlebell workouts</option>
+                        <option value='Circuit training'>Circuit training</option>
+                        <option value='Powerlifting'>Powerlifting</option>
+                        <option value='CrossFit-style workouts'>CrossFit-style workouts</option>
+                        </>
+                    )}
+                    {selectedWorkout.notes === 'Flexibility and Mobility' && (  
+                      <>
+                        <option value='Yoga'>Yoga</option>
+                        <option value='Pilates'>Pilates</option>
+                        <option value='Foam Rolling'>Foam Rolling</option>
+                        <option value='Mobility Drills'>Mobility Drills</option>
+                        <option value='Dynamic Warm-up Exercises'>Dynamic Warm-up Exercises</option>
+                        </>
+                    )}
+                    {selectedWorkout.notes === 'Group Fitness' && (
+                      <>
+                        <option value='Zumba'>Zumba</option>
+                        <option value='Aerobics'>Aerobics</option>
+                        <option value='Kickboxing'>Kickboxing</option>
+                        <option value='Barre'>Barre</option>
+                        <option value='Bootcamp'>Bootcamp</option>
+                        </>
+                    )}
                   </>
                 )}
               </Form.Control>
