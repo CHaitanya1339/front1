@@ -106,8 +106,8 @@ const WorkoutForm = () => {
                   <option value='Strength Training'>Strength Training</option>
                   <option value='Group Fitness'>Group Fitness</option>
                   <option value='Outdoor Activities'>Outdoor Activities</option>
-                  <option value='Mind-Body Exercises'>
-                    Mind-Body Exercises
+                  <option value='Flexibility and Mobility'>
+                  Flexibility and Mobility
                   </option>
                 </select>
               </div>
