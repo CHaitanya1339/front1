@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../layout/Navbar'
+import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import avatar02 from "../assets/img/im2.jpg";
 import avatar01 from "../assets/img/im3.jpg";
 import avatar03 from "../assets/img/im1.jpg";
 import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 
 
 var c = 0
+
+const decount = () => {
+  c = 0
+}
+
+
 let work = []
 let exercises = []
 let dic = { 1: "Cardiovascular Workouts", 2: "Strength Training", 3: "Flexibility and Mobility", 4: "Group Fitness", 5: "Outdoor Activities", 6: "Mind-Body Exercises" }
@@ -34,7 +42,7 @@ function AddExercises(props) {
     description: '',
   });
 
- 
+
 
   const addopt = (e) => {
     if (c == 0) {
@@ -179,7 +187,7 @@ function AddExercises(props) {
 
 
 function ExerciseDisplay(props) {
-  var status=0;
+  var status = 0;
   const [updateShow, setUpdateShow] = useState({
     uShow: false,
     updateId: ""
@@ -207,17 +215,17 @@ function ExerciseDisplay(props) {
   const removeExercise = async (e) => {
     let temp = e.target.id.split("#")
     axios.delete(`http://localhost:8081/exercises/${temp[1]}`);
-    status=1
+    status = 1
     let select = document.getElementById("workout_id");
     var option;
-    for (var i=0; i<select.options.length; i++) {
+    for (var i = 0; i < select.options.length; i++) {
       option = select.options[i];
-    
-      if (option.value == temp[1]) {
-         option.setAttribute('selected', true);
 
-         break; 
-      } 
+      if (option.value == temp[1]) {
+        option.setAttribute('selected', true);
+
+        break;
+      }
     }
     const event = new Event("change", { bubbles: true });
     select.dispatchEvent(event);
@@ -226,11 +234,11 @@ function ExerciseDisplay(props) {
   }
 
   const displayexercise = async (e) => {
-    if(status===1){
+    if (status === 1) {
       alert("Exercise Deleted")
-      status=0
+      status = 0
     }
-    
+
     axios.get(`http://localhost:8081/workouts/${e.target.value}/exercises`)
       .then(res => {
         exercises = res.data
@@ -320,6 +328,7 @@ function ExerciseDisplay(props) {
 
 let updatex = {}
 function UpdateExercise(props) {
+ 
   for (let i of exercises) {
     if (i.id == props.id) {
       updatex = i
@@ -332,38 +341,36 @@ function UpdateExercise(props) {
     list.push(exercise_list[index][i])
 
   }
- 
+
   const [updateExercise, setUpdateExercise] = useState({
-    id:'',
-    workout_id: '',
-    name: '',
     description: '',
   })
 
-  
-  const onInputChange = (e) => {
-    if (e.target.name === "name") {
-      let vals = document.getElementById(e.target.name).selectedIndex;
-      setUpdateExercise({ ...updateExercise, ['id']: updatex.workout_id + String(vals), [e.target.name]: e.target.value });
-    }
-    else {
-      setUpdateExercise({ ...updateExercise, [e.target.name]: e.target.value })
 
-    }
+  const onInputChange = (e) => {
+    setUpdateExercise({ ...updateExercise, [e.target.name]: e.target.value })
 
   };
 
 
   const saveChanges = () => {
-    if (updateExercise.id == '') {
-      setUpdateExercise({ ...updateExercise, ['id']: updatex.id, ['name']: updatex.name, ['workout_id']: updatex.workout_id })
+    let updatelist = { 'workout_id': updatex.workout_id, }
+    updatelist['id'] = updatex.id
+    updatelist['name'] = updatex.name
+
+    if (updateExercise.description == '') {
+      updatelist['description'] = updatex.description
 
     }
-    if (updatex.description == '') {
-      setUpdateExercise({ ...updateExercise, ["description"]: updatex.deprication, ['workout_id']: updatex.workout_id })
-
+    else {
+      updatelist['description'] = updateExercise.description
     }
-    console.log(updateExercise)
+    console.log(updatelist)
+    axios.put(`http://localhost:8081/exercises/${updatex.id}`,updatelist);
+    alert("updated")
+    setUpdateExercise({ ...updateExercise, ['description']: '' })
+
+
   }
 
 
@@ -392,19 +399,15 @@ function UpdateExercise(props) {
                 <label htmlFor="id" className="form-label">
                   Exercise
                 </label>
-                <select
+                <input
                   className="form-control"
                   id="name"
                   name="name"
-                  onChange={onInputChange}
-                >
-                  {
-                    list.map((exer, ind) => (
-                      exer == updatex.name ? <option value={exer} id={ind} selected>{exer}</option> : <option value={exer}>{exer}</option>
-                    ))
-                  }
-
-                </select>
+                  value={updatex.name}
+                  readOnly={true}
+                  
+                />
+                
               </div>
 
               <div className="mb-3">
@@ -458,10 +461,7 @@ const Tracking = () => {
   const [modalShow, setModalShow] = React.useState(false);
   const [lgShow, setLgShow] = useState(false);
 
-  const decount = () => {
-    c = 0
-  }
-
+ 
   return (
     <div>
       <header style={{ marginTop: "10px" }} >
@@ -483,7 +483,7 @@ const Tracking = () => {
 
                 <AddExercises
                   show={modalShow}
-                  onHide={() => {setModalShow(false); decount() }}
+                  onHide={() => { setModalShow(false); decount() }}
                 />
               </Card.Body>
             </Card>
@@ -524,4 +524,5 @@ const Tracking = () => {
   )
 }
 
-export default Tracking
+
+export default Tracking;
