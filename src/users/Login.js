@@ -15,7 +15,6 @@ const Login = () => {
     emailID: "",
     password: "",
   });
-  
 
   const [dbData, setdbData] = useState([]);
   const notify = () => toast("Login Sucessful!");
@@ -46,18 +45,19 @@ const Login = () => {
       if (dbData[i]['email'] === user['emailID'] && dbData[i]['password'] === user['password']) {
         // Store user information in local storage
         localStorage.setItem('user', JSON.stringify(dbData[i]));
-        notify();
         navigate('/user-dashboard');
+        notify();
         found = true;
         break;
       }
     }
     if (!found) {
+      notify();
       document.getElementById("msg").hidden = false;
     }
   };
 
- 
+
 
   return (
     <div><Header />
@@ -111,7 +111,6 @@ const Login = () => {
               <div className='msg' id="msg" hidden>
                   Incorrect Email or Password
                 </div>
-                <ToastContainer />
             </form>
           </div>
         </div>
