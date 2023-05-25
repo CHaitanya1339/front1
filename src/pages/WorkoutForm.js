@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Navbar from '../layout/Navbar';
 
 const WorkoutForm = () => {
   let dic= { "Cardiovascular Workouts":"1", "Strength Training":"2", "Flexibility and Mobility":"3",  "Group Fitness":"4","Outdoor Activities":"5", "Mind-Body Exercises":"6" }
@@ -51,9 +50,6 @@ const WorkoutForm = () => {
 
   return (
     <>
-      <header>
-        <Navbar />
-      </header>
       <div className='container'>
         <div className='row'>
           <div className='col-md-6 offset-md-3 border rounded p-4 mt-2 shadow'>

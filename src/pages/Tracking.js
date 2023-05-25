@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../layout/Navbar'
-import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import avatar02 from "../assets/img/im2.jpg";
 import avatar01 from "../assets/img/im3.jpg";
 import avatar03 from "../assets/img/im1.jpg";
 import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 
 

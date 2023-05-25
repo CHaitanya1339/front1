@@ -13,6 +13,8 @@ import UpdateProfile from './pages/Updateprofile';
 import Workoutform from './pages/WorkoutForm';
 import WorkoutList from './pages/WorkoutList';
 import ExerciseList from './pages/ExerciseList';
+import WorkoutBase from './pages/WorkoutBase';
+
 
 
 function App() {
@@ -34,6 +36,7 @@ function App() {
           <Route exact path='/user-dashboard' element={<UserDashboard />} />
           <Route exact path='/add-exercises' element={<WorkoutList />} />
           <Route exact path="/show-exercises" element={<ExerciseList />} /> 
+          <Route exact path='/WorkoutBase' element={<WorkoutBase />} />
         </Routes>
       </Router>
     </div>

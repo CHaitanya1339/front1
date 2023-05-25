@@ -73,8 +73,8 @@ const Navbar = () => {
             </div>
 
             <div className="nav_right">
-              <Link className="btn" to="/WorkoutForm">
-                Workout Plan Creator
+              <Link className="btn" to="/WorkoutBase">
+                Plan your workouts
               </Link>
               <span className="mobile_menu">
                 <i className="ri-menu-line"></i>
