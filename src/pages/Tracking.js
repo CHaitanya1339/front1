@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../layout/Navbar'
-import { Link } from 'react-router-dom';
+import Navbar from '../layout/Navbar';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import avatar02 from "../assets/img/im2.jpg";
 import avatar01 from "../assets/img/im3.jpg";
 import avatar03 from "../assets/img/im1.jpg";
 import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 
 
@@ -196,7 +193,7 @@ function ExerciseDisplay(props) {
   var option = ``
 
   const addopt = (e) => {
-    if (c == 0) {
+    if (c=== 0) {
       c += 1
       option = `<option value="">Select a workout</option>`
       for (let i of work) {
@@ -251,7 +248,7 @@ function ExerciseDisplay(props) {
           <td>
           <button type="button" class="btn btn-info" id=${i.id} name=${i.id} }>
           Edit</button>
-          &nbsp; <button type="button" class="btn btn-danger" name=${e} id=${'remove' + '#' + String(i.id)}>X</button>
+          &nbsp; <button type="button" class="btn btn-danger" name=${e} id=${'remove' + '#' + String(i.id)}>Delete</button>
           </td></tr>`;
 
 
@@ -263,7 +260,7 @@ function ExerciseDisplay(props) {
 
         for (let i of exercises) {
           const element = document.getElementById(i.id).onclick = showeditform
-          document.getElementById('remove' + '#' + String(i.id)).onclick = removeExercise
+          document.getElementById(('remove' + '#' + String(i.id))).onclick = removeExercise
         }
       })
       .catch(err => console.log(err));
@@ -328,7 +325,7 @@ function ExerciseDisplay(props) {
 
 let updatex = {}
 function UpdateExercise(props) {
- 
+
   for (let i of exercises) {
     if (i.id == props.id) {
       updatex = i
@@ -366,7 +363,7 @@ function UpdateExercise(props) {
       updatelist['description'] = updateExercise.description
     }
     console.log(updatelist)
-    axios.put(`http://localhost:8081/exercises/${updatex.id}`,updatelist);
+    axios.put(`http://localhost:8081/exercises/${updatex.id}`, updatelist);
     alert("updated")
     setUpdateExercise({ ...updateExercise, ['description']: '' })
 
@@ -405,9 +402,9 @@ function UpdateExercise(props) {
                   name="name"
                   value={updatex.name}
                   readOnly={true}
-                  
+
                 />
-                
+
               </div>
 
               <div className="mb-3">
@@ -443,25 +440,12 @@ function UpdateExercise(props) {
   );
 }
 
-
-
 const Tracking = () => {
-  const hover = (e) => {
-    console.log("hy")
-    console.log(e)
-    document.getElementsByClassName(e.target.name).style.boxShadow = "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)";
-  }
-
-  const dehover = (e) => {
-    console.log("hy")
-    console.log(e.target.name)
-    document.getElementsByClassName(e.target.name).style.boxShadow = "";
-  }
-
+  
   const [modalShow, setModalShow] = React.useState(false);
   const [lgShow, setLgShow] = useState(false);
 
- 
+
   return (
     <div>
       <header style={{ marginTop: "10px" }} >
@@ -469,55 +453,40 @@ const Tracking = () => {
       </header>
       <div className='container'>
         <div className='row'>
-          <div className='col'>
-            <Card style={{ width: '18rem', border: "2px solid rgb(207, 117, 249)" }}>
-              <Card.Img variant="top" src={avatar03} />
-              <Card.Body>
-                <Card.Title>Transform Yourself</Card.Title>
-                <Card.Text>
-                  Take the Next Step Towards a Healthier You: Activate Exercise Now!
-                </Card.Text>
-                <Button variant="primary" onClick={() => setModalShow(true)}>
-                  Add Exercise
-                </Button>
 
+          <Card className="text-black" style={{ backgroundColor: "rgb(207, 117, 249)" }}>
+            <Card.Img src={avatar03} alt="Card image" />
+            <Card.ImgOverlay>
+              <Card.Title style={{ marginTop: '20px', fontSize: '20px', textAlign: 'right', marginRight: '20px' }}>Transform Yourself</Card.Title>
+              <Card.Text style={{ fontSize: '20px', textAlign: 'right', marginRight: '20px' }}>
+                "Take the Next Step Towards a Healthier You:<br /> Activate Exercise Now!"
+              </Card.Text>
+              <Card.Text style={{ textAlign: 'right', marginTop: '50px', marginRight: '20px' }}><Button variant="primary" onClick={() => setModalShow(true)}>Add Exercise</Button>
                 <AddExercises
                   show={modalShow}
                   onHide={() => { setModalShow(false); decount() }}
                 />
-              </Card.Body>
-            </Card>
-          </div>
-          <div className='col'>
-            <Card style={{ width: '18rem', border: "2px solid rgb(207, 117, 249)" }}>
-              <Card.Img variant="top" src={avatar01} />
-              <Card.Body>
-                <Card.Title>Check Progress</Card.Title>
-                <Card.Text>
-                  Put Your Hard Work on Display: Show Your Exercise All Achievements!
-                </Card.Text>
-                <Button variant="primary" onClick={() => setLgShow(true)}>Show All Exercise</Button>
+              </Card.Text>
+            </Card.ImgOverlay>
+          </Card>
+        </div>
+        <div className='row'>
+          <Card className="text-black" style={{ backgroundColor: "rgb(207, 117, 249)" }}>
+            <Card.Img src={avatar01} alt="Card image" />
+            <Card.ImgOverlay>
+              <Card.Title style={{ marginTop: '20px', fontSize: '20px', textAlign: 'left', marginLeft: '20px' }}>Redefine Yourself</Card.Title>
+              <Card.Text style={{ fontSize: '20px', textAlign: 'left', marginLeft: '20px' }}>
+                "Customize Your Workout:<br /> Delete and Refine Your Exercise Selections!"
+              </Card.Text>
+              <Card.Text style={{ textAlign: 'left', marginTop: '50px', marginLeft: '20px' }}><Button variant="primary" onClick={() => setLgShow(true)}>Update and Delete</Button>
                 <ExerciseDisplay
                   show={lgShow}
                   onHide={() => { setLgShow(false); decount() }}
                 />
+              </Card.Text>
+            </Card.ImgOverlay>
+          </Card>
 
-              </Card.Body>
-            </Card>
-          </div>
-          <div className='col'>
-            <Card name="card1" id="card1" className="card1" style={{ width: '18rem', border: "2px solid rgb(207, 117, 249)" }}>
-              <Card.Img variant="top" src={avatar02} />
-              <Card.Body>
-                <Card.Title>Redefine Yourself</Card.Title>
-                <Card.Text>
-                  Customize Your Workout: Delete and Refine Your Exercise Selections!
-                </Card.Text>
-                <Button variant="primary">Update and Delete</Button>
-              </Card.Body>
-            </Card>
-
-          </div>
         </div>
       </div>
     </div>

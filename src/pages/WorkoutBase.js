@@ -234,6 +234,7 @@ const deleteWorkout = async (workoutId) => {
             <Table className="table table-hover">
               <thead className="table-light">
                 <tr>
+                  <th>Workout Id</th>
                   <th>Date</th>
                   <th>Duration (minutes)</th>
                   <th>Type of Workout</th>
@@ -242,6 +243,7 @@ const deleteWorkout = async (workoutId) => {
               <tbody>
                 {allWorkouts.map((workout) => (
                   <tr key={workout.id}>
+                    <td>{workout.id}</td>
                     <td>{workout.date}</td>
                     <td>{workout.duration}</td>
                     <td>{workout.notes}</td>
@@ -267,6 +269,7 @@ const deleteWorkout = async (workoutId) => {
             <Table className="table table-hover">
               <thead className="table-light">
                 <tr>
+                <th>workout Id</th>
                   <th>Date</th>
                   <th>Duration (minutes)</th>
                   <th>Type of Workout</th>
@@ -276,6 +279,7 @@ const deleteWorkout = async (workoutId) => {
               <tbody>
                 {allWorkouts.map((workout) => (
                   <tr key={workout.id}>
+                    <td>{workout.id}</td>
                     <td>{workout.date}</td>
                     <td>{workout.duration}</td>
                     <td>{workout.notes}</td>
