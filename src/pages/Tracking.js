@@ -6,9 +6,6 @@ import avatar01 from "../assets/img/im3.jpg";
 import avatar03 from "../assets/img/im1.jpg";
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-
 
 
 var c = 0
@@ -21,6 +18,8 @@ const decount = () => {
 let work = []
 let exercises = []
 let dic = { 1: "Cardiovascular Workouts", 2: "Strength Training", 3: "Flexibility and Mobility", 4: "Group Fitness", 5: "Outdoor Activities", 6: "Mind-Body Exercises" }
+let val = { "Cardiovascular Workouts":1, "Strength Training":2, "Flexibility and Mobility":3, "Group Fitness":4, "Outdoor Activities":5, "Mind-Body Exercises":6 }
+let workoutids={}
 let exercise_list = {
   1: ["Running/jogging on a treadmill or outdoors", "Cycling (indoor or outdoor)", "Jumping rope", "High-intensity interval training (HIIT)", "Stair climbing", "Rowing"],
   2: ["Weightlifting (using dumbbells, barbells, or weight machines)", "Bodyweight exercises (push-ups, squats, lunges, planks)", "Resistance band exercises", "Kettlebell workouts", "Circuit training", "Powerlifting", "CrossFit-style workouts"],
@@ -45,12 +44,12 @@ function AddExercises(props) {
 
 
   const addopt = (e) => {
-    if (c === 0) {
+    if (c == 0) {
       c += 1
       option = `<option value="">Select a workout</option>`
       for (let i of work) {
 
-        option += `<option value=${i.id}>${dic[String(i.id).slice(1, 2)]}</option>`
+        option += `<option value=${String(i.id)+"#"+String(val[i.notes])}>${i.notes}</option>`
       }
       document.getElementById(e.target.name).innerHTML = option
     }
@@ -66,36 +65,27 @@ function AddExercises(props) {
         console.log(work)
       })
       .catch(err => console.log(err));
-  }, );
-
-  useEffect(() => {
-    AOS.init({
-      duration: 800, // Duration of animation in milliseconds
-      once: true, // Only animate once on scroll
-    });
   }, []);
-  
 
 
 
   const onInputChange = (e) => {
-    if (e.target.name === "name") {
-      let vals = e.target.value.split("#")
-      setexercise({ ...exercise, ['id']: exercise.workout_id + String(vals[1]), [e.target.name]: vals[0] });
+    if (e.target.name==="workout_id"){
+   setexercise({ ...exercise, [e.target.name]: e.target.value.split("#")[0] })
     }
-    else {
-      setexercise({ ...exercise, [e.target.name]: e.target.value }
-      )
+    else{
+      setexercise({ ...exercise, [e.target.name]: e.target.value })
     }
-
+  
   };
 
   const addexercise = (e) => {
     let temp = `<option value="">Select a Exercise</option>`
-    console.log(e.target.name)
-    let l = exercise_list[String(e.target.value).slice(1, 2)].length
+    console.log(parseInt(e.target.value.split("#")[1]))
+    var j=parseInt(e.target.value.split("#")[1])
+    let l = exercise_list[j].length
     for (let i = 0; i < l; i++) {
-      temp += `<option value='${exercise_list[String(e.target.value).slice(1, 2)][i] + "#" + String(i + 1)}'>${exercise_list[String(e.target.value).slice(1, 2)][i]}</option>`
+      temp += `<option value='${exercise_list[j][i]}'>${exercise_list[j][i]}</option>`
     }
     document.getElementById('name').innerHTML = temp
 
@@ -103,11 +93,11 @@ function AddExercises(props) {
 
   const handelSubmit = async (e) => {
     e.preventDefault();
-    const w_id = exercise.workout_id
+    console.log(exercise)
     try {
 
       const response = await axios.post(
-        `http://localhost:8081/workouts/${w_id}/exercises`,
+        `http://localhost:8081/workouts/${exercise.workout_id}/exercises`,
         exercise);
       setexercise({ ...exercise, ['description']: "" });
       console.log(response);// Handle the response as needed
@@ -209,7 +199,7 @@ function ExerciseDisplay(props) {
       option = `<option value="">Select a workout</option>`
       for (let i of work) {
 
-        option += `<option value=${i.id}>${dic[String(i.id).slice(1, 2)]}</option>`
+        option += `<option value=${String(i.id)+"#"+String(val[i.notes])}>${i.notes}</option>`
       }
       document.getElementById(e.target.name).innerHTML = option
     }
@@ -229,7 +219,7 @@ function ExerciseDisplay(props) {
     for (var i = 0; i < select.options.length; i++) {
       option = select.options[i];
 
-      if (option.value === temp[1]) {
+      if (option.value == temp[1]) {
         option.setAttribute('selected', true);
 
         break;
@@ -246,8 +236,8 @@ function ExerciseDisplay(props) {
       alert("Exercise Deleted")
       status = 0
     }
-
-    axios.get(`http://localhost:8081/workouts/${e.target.value}/exercises`)
+    var workid=parseInt(e.target.value.split("#")[0])
+    axios.get(`http://localhost:8081/workouts/${workid}/exercises`)
       .then(res => {
         exercises = res.data
         console.log(exercises)
@@ -270,6 +260,7 @@ function ExerciseDisplay(props) {
         document.getElementById("exercisetable").innerHTML = option
 
         for (let i of exercises) {
+          const element = document.getElementById(i.id).onclick = showeditform
           document.getElementById(('remove' + '#' + String(i.id))).onclick = removeExercise
         }
       })
@@ -334,13 +325,24 @@ function ExerciseDisplay(props) {
 }
 
 let updatex = {}
+let workid={}
 function UpdateExercise(props) {
 
   for (let i of exercises) {
-    if (i.id === props.id) {
+    if (i.id == props.id) {
       updatex = i
     }
   }
+
+  
+  for (let i of work) {
+      if (i.id==updatex.workout_id){
+          workid=i
+      }
+
+  }
+  
+  console.log(workid)
 
   let list = []
   let index = String(updatex.workout_id).slice(1, 2)
@@ -361,11 +363,11 @@ function UpdateExercise(props) {
 
 
   const saveChanges = () => {
-    let updatelist = { 'workout_id': updatex.workout_id, }
+    let updatelist = { 'workout_id': workid.id, }
     updatelist['id'] = updatex.id
     updatelist['name'] = updatex.name
 
-    if (updateExercise.description === '') {
+    if (updateExercise.description == '') {
       updatelist['description'] = updatex.description
 
     }
@@ -397,7 +399,7 @@ function UpdateExercise(props) {
                 <input
                   type={"text"}
                   className="form-control"
-                  value={dic[String(updatex.workout_id).slice(1, 2)]}
+                  value={workid.notes}
                   readOnly={true}
                 />
               </div>
@@ -464,7 +466,7 @@ const Tracking = () => {
       <div className='container'>
         <div className='row'>
 
-        <Card className="text-black" style={{ backgroundColor: "rgb(207, 117, 249)" }} data-aos="fade-up" data-aos-delay="200">
+          <Card className="text-black" style={{ backgroundColor: "rgb(207, 117, 249)" }}>
             <Card.Img src={avatar03} alt="Card image" />
             <Card.ImgOverlay>
               <Card.Title style={{ marginTop: '20px', fontSize: '20px', textAlign: 'right', marginRight: '20px' }}>Transform Yourself</Card.Title>
@@ -481,14 +483,14 @@ const Tracking = () => {
           </Card>
         </div>
         <div className='row'>
-        <Card className="text-black" style={{ backgroundColor: "rgb(207, 117, 249)" }} data-aos="fade-up" data-aos-delay="200">
+          <Card className="text-black" style={{ backgroundColor: "rgb(207, 117, 249)" }}>
             <Card.Img src={avatar01} alt="Card image" />
             <Card.ImgOverlay>
               <Card.Title style={{ marginTop: '20px', fontSize: '20px', textAlign: 'left', marginLeft: '20px' }}>Redefine Yourself</Card.Title>
               <Card.Text style={{ fontSize: '20px', textAlign: 'left', marginLeft: '20px' }}>
                 "Customize Your Workout:<br /> Delete and Refine Your Exercise Selections!"
               </Card.Text>
-              <Card.Text style={{ textAlign: 'left', marginTop: '50px', marginLeft: '20px' }}><Button variant="primary" onClick={() => setLgShow(true)}>Customize!</Button>
+              <Card.Text style={{ textAlign: 'left', marginTop: '50px', marginLeft: '20px' }}><Button variant="primary" onClick={() => setLgShow(true)}>Update and Delete</Button>
                 <ExerciseDisplay
                   show={lgShow}
                   onHide={() => { setLgShow(false); decount() }}

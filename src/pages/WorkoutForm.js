@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const WorkoutForm = () => {
-  let dic= { "Cardiovascular Workouts":"1", "Strength Training":"2", "Flexibility and Mobility":"3",  "Group Fitness":"4","Outdoor Activities":"5", "Mind-Body Exercises":"6" }
- 
   const user = JSON.parse(localStorage.getItem('user'));
   const uid = user.id;
   const [workout, setWorkout] = useState({
@@ -15,14 +13,8 @@ const WorkoutForm = () => {
   });
 
   const onInputChange = (e) => {
-    if (e.target.name==="notes"){
-      setWorkout({ ...workout, ['id']:String(uid)+dic[e.target.value], [e.target.name]: e.target.value });
-    }
-  else{
     setWorkout({ ...workout, [e.target.name]: e.target.value });
-  
-    }
-  
+ 
   };
 
   const handleSubmit = async (e) => {
