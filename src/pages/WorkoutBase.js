@@ -1,29 +1,16 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Card, Modal, Table } from 'react-bootstrap';
 import axios from 'axios';
 import Navbar from '../layout/Navbar';
 import avatar02 from "../assets/img/wb3.png";
 import avatar01 from "../assets/img/wb2.png";
 import avatar03 from "../assets/img/wb1.png";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 const WorkoutBase = () => {
   const [showModal, setShowModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [showFormModal, setShowFormModal] = useState(false); // State for workout form modal
+  const [showFormModal, setShowFormModal] = useState(false);
   const [allWorkouts, setAllWorkouts] = useState([]);
-  const [updatedWorkout, setUpdatedWorkout] = useState({
-    id: '',
-    date: '',
-    duration: '',
-    notes: ''
-  });
-  const handleUpdateWorkout = (workout) => {
-    setUpdatedWorkout(workout);
-    setShowUpdateModal(true);
-  };
-    
   const dic = {
     "Cardiovascular Workouts": "1",
     "Strength Training": "2",
@@ -32,29 +19,6 @@ const WorkoutBase = () => {
     "Outdoor Activities": "5",
     "Mind-Body Exercises": "6"
   };
-  useEffect(() => {
-    AOS.init({
-      duration: 800, // Animation duration
-      once: true, // Only animate once
-      mirror: false, // Disable animation mirroring
-    });
-  }, []);
-  const handleUpdateSubmit = async (e) => {
-    e.preventDefault();
-  
-    try {
-      await axios.put(`http://localhost:8081/workouts/${updatedWorkout.id}`, updatedWorkout);
-      alert('Workout Updated Successfully');
-      setShowUpdateModal(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-const onInputChange = (e) => {
-  setUpdatedWorkout({ ...updatedWorkout, [e.target.name]: e.target.value });
-};
-  
-
 
   const user = JSON.parse(localStorage.getItem('user'));
   const uid = user.id;
@@ -69,28 +33,29 @@ const onInputChange = (e) => {
   const handleModal = () => {
     setShowModal(!showModal);
   };
+
   const handleUpdateModal = () => {
     setShowUpdateModal(!showUpdateModal);
   };
-
-  
 
   const handleFormModal = () => {
     setShowFormModal(!showFormModal);
   };
 
-
-
+  const onInputChange = (e) => {
+    if (e.target.name === "notes") {
+      setWorkout({ ...workout, ['id']: String(uid) + dic[e.target.value], [e.target.name]: e.target.value });
+    } else {
+      setWorkout({ ...workout, [e.target.name]: e.target.value });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      console.log(workout)
-      const response = await axios.post(
-        `http://localhost:8081/users/${uid}/workouts`,
-        workout
-      );
+      console.log(workout);
+      const response = await axios.post(`http://localhost:8081/users/${uid}/workouts`, workout);
       console.log(response); // Handle the response as needed
       setWorkout({
         user_id: uid,
@@ -114,26 +79,20 @@ const onInputChange = (e) => {
       console.error(error);
     }
   };
-  const fetchandupdateWorkouts = async () => {
-    try {
-        const response = await axios.get(`http://localhost:8081/users/${uid}/workouts`);
-        const sortedWorkouts = response.data.sort((a, b) => new Date(a.date) - new Date(b.date));
-        setAllWorkouts(sortedWorkouts);
-    } catch (error) {
-        console.error(error);
-    }
-};
-const deleteWorkout = async (workoutId) => {
-  try {
-    await axios.delete(`http://localhost:8081/workouts/${workoutId}`);
-    const updatedWorkouts = allWorkouts.filter((workout) => workout.id !== workoutId);
-    setAllWorkouts(updatedWorkouts);
-    alert('Workout Deleted Successfully');
-  } catch (error) {
-    console.error(error);
-  }
-};
 
+  const deleteWorkout = async (workoutId) => {
+    try {
+      await axios.delete(`http://localhost:8081/workouts/${workoutId}`);
+      setAllWorkouts((prevWorkouts) => prevWorkouts.filter((workout) => workout.id !== workoutId));
+      alert('Workout Deleted Successfully');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorkouts();
+  }, []);
 
   const WorkoutForm = () => {
     return (
@@ -201,64 +160,80 @@ const deleteWorkout = async (workoutId) => {
 
   return (
     <div>
-    <header style={{ marginTop: '10px' }}>
-      <Navbar />
-    </header>
-    <div className="container">
-      <div className="row">
-        <div className="col" data-aos="fade-up">
-          <Card style={{ width: '18rem', border: '2px solid rgb(207, 117, 249)' }}>
-            <Card.Img variant="top" src={avatar03} />
-            <Card.Body>
-              <Card.Title>Craft Your Fitness Journey</Card.Title>
-              <Card.Text>
-                "Create your personalized fitness journey with ease. Add a workout and take a step towards a healthier you!"
-              </Card.Text>
-              <Button variant="primary" onClick={handleFormModal}>
-                Add a Workout
-              </Button>
-            </Card.Body>
-          </Card>
-        </div>
-        <div className="col" data-aos="fade-up" data-aos-delay="200">
-          <Card style={{ width: '18rem', border: '2px solid rgb(207, 117, 249)' }}>
-            <Card.Img variant="top" src={avatar01} />
-            <Card.Body>
-              <Card.Title>Unveil Your Workout Gallery</Card.Title>
-              <Card.Text>
-                "Stay on top of your fitness game with our comprehensive workout tracking. Show a workout and get ready to crush your goals!"
-              </Card.Text>
-              <Button variant="primary" onClick={() => {
-                fetchWorkouts();
-                handleModal();
-              }}>
-                Show All Workouts
-              </Button>
-            </Card.Body>
-          </Card>
-        </div>
-        <div className="col" data-aos="fade-up" data-aos-delay="400">
-          <Card name="card1" id="card1" className="card1" style={{ width: '18rem', border: '2px solid rgb(207, 117, 249)' }}>
-            <Card.Img variant="top" src={avatar02} />
-            <Card.Body>
-              <Card.Title>Refine, Renew, and Reimagine</Card.Title>
-              <Card.Text>
-                "Flexibility is key to achieving your fitness targets. Update and delete workouts effortlessly to stay on track!"
-              </Card.Text>
-              <Button variant="primary" onClick={()=>{
-                  fetchandupdateWorkouts();
-                  handleUpdateModal();
-              }}>Update and Delete</Button>
-            </Card.Body>
-          </Card>
+      <header style={{ marginTop: '10px' }}>
+        <Navbar />
+      </header>
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <Card style={{ width: '18rem', border: '2px solid rgb(207, 117, 249)' }}>
+              <Card.Img variant="top" src={avatar03} />
+              <Card.Body>
+                <Card.Title>Craft Your Fitness Journey</Card.Title>
+                <Card.Text>
+                  "Create your personalized fitness journey with ease. Add a workout and take a step towards a healthier you!"
+                </Card.Text>
+                <Button variant="primary" onClick={handleFormModal}>
+                  Add a Workout
+                </Button>
+              </Card.Body>
+            </Card>
+          </div>
+          <div className="col">
+            <Card style={{ width: '18rem', border: '2px solid rgb(207, 117, 249)' }}>
+              <Card.Img variant="top" src={avatar01} />
+              <Card.Body>
+                <Card.Title>Unveil Your Workout Gallery</Card.Title>
+                <Card.Text>
+                  "Stay on top of your fitness game with our comprehensive workout tracking. Show a workout and get ready to crush your goals!"
+                </Card.Text>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    fetchWorkouts();
+                    handleModal();
+                  }}
+                >
+                  Show All Workouts
+                </Button>
+              </Card.Body>
+            </Card>
+          </div>
+          <div className="col">
+            <Card
+              name="card1"
+              id="card1"
+              className="card1"
+              style={{ width: '18rem', border: '2px solid rgb(207, 117, 249)' }}
+            >
+              <Card.Img variant="top" src={avatar02} />
+              <Card.Body>
+                <Card.Title>Refine, Renew, and Reimagine</Card.Title>
+                <Card.Text>
+                  "Flexibility is key to achieving your fitness targets. Update and delete workouts effortlessly to stay on track!"
+                </Card.Text>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    handleUpdateModal();
+                  }}
+                >
+                  Update and Delete
+                </Button>
+              </Card.Body>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
 
-      <Modal size="xl"
-        aria-labelledby="example-modal-sizes-title-lg" show={showModal} onHide={handleModal}>
+      <Modal
+        size="xl"
+        aria-labelledby="example-modal-sizes-title-lg"
+        show={showModal}
+        onHide={handleModal}
+      >
         <Modal.Header closeButton>
-          <Modal.Title  id="example-modal-sizes-title-lg">All Workouts</Modal.Title>
+          <Modal.Title id="example-modal-sizes-title-lg">All Workouts</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {allWorkouts.length === 0 ? (
@@ -267,7 +242,6 @@ const deleteWorkout = async (workoutId) => {
             <Table className="table table-hover">
               <thead className="table-light">
                 <tr>
-                  <th>Workout Id</th>
                   <th>Date</th>
                   <th>Duration (minutes)</th>
                   <th>Type of Workout</th>
@@ -276,7 +250,6 @@ const deleteWorkout = async (workoutId) => {
               <tbody>
                 {allWorkouts.map((workout) => (
                   <tr key={workout.id}>
-                    <td>{workout.id}</td>
                     <td>{workout.date}</td>
                     <td>{workout.duration}</td>
                     <td>{workout.notes}</td>
@@ -288,12 +261,14 @@ const deleteWorkout = async (workoutId) => {
         </Modal.Body>
       </Modal>
 
-      <Modal size="xl"
-        aria-labelledby="example-modal-sizes-title-lg" show={showUpdateModal} onHide={handleUpdateModal}>
+      <Modal
+        size="xl"
+        aria-labelledby="example-modal-sizes-title-lg"
+        show={showUpdateModal}
+        onHide={handleUpdateModal}
+      >
         <Modal.Header closeButton>
-        <Modal.Title id="example-modal-sizes-title-lg">
-            All Workouts
-          </Modal.Title>
+          <Modal.Title id="example-modal-sizes-title-lg">All Workouts</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {allWorkouts.length === 0 ? (
@@ -302,7 +277,6 @@ const deleteWorkout = async (workoutId) => {
             <Table className="table table-hover">
               <thead className="table-light">
                 <tr>
-                <th>workout Id</th>
                   <th>Date</th>
                   <th>Duration (minutes)</th>
                   <th>Type of Workout</th>
@@ -312,20 +286,19 @@ const deleteWorkout = async (workoutId) => {
               <tbody>
                 {allWorkouts.map((workout) => (
                   <tr key={workout.id}>
-                    <td>{workout.id}</td>
                     <td>{workout.date}</td>
                     <td>{workout.duration}</td>
                     <td>{workout.notes}</td>
-                    <td><button
-  className="btn btn-primary"
-  onClick={() => handleUpdateWorkout(workout)}
->
-  Update
-</button>{' '}{' '}
-                    <button
+                    <td>
+                      <button className="btn btn-info">Update</button>
+                      {' '}
+                      <button
                         className="btn btn-danger"
                         onClick={() => deleteWorkout(workout.id)}
-                      > X </button></td>
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
