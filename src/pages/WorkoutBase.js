@@ -93,14 +93,14 @@ const WorkoutBase = () => {
     }
 };
 const deleteWorkout = async (workoutId) => {
-    try {
-      await axios.delete(`http://localhost:8081/users/${uid}/workouts/${workoutId}`);
-      setAllWorkouts(allWorkouts.filter((workout) => workout.id !== workoutId));
-      alert('Workout Deleted Successfully');
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  try {
+    await axios.delete(`http://localhost:8081/users/${uid}/workouts/${workoutId}`);
+    setAllWorkouts(allWorkouts.filter((workout) => workout.id !== workoutId));
+    alert('Workout Deleted Successfully');
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const WorkoutForm = () => {
     return (
