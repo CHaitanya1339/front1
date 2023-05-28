@@ -6,6 +6,9 @@ import avatar01 from "../assets/img/im3.jpg";
 import avatar03 from "../assets/img/im1.jpg";
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 
 
 var c = 0
@@ -42,7 +45,7 @@ function AddExercises(props) {
 
 
   const addopt = (e) => {
-    if (c == 0) {
+    if (c === 0) {
       c += 1
       option = `<option value="">Select a workout</option>`
       for (let i of work) {
@@ -63,7 +66,15 @@ function AddExercises(props) {
         console.log(work)
       })
       .catch(err => console.log(err));
+  }, );
+
+  useEffect(() => {
+    AOS.init({
+      duration: 800, // Duration of animation in milliseconds
+      once: true, // Only animate once on scroll
+    });
   }, []);
+  
 
 
 
@@ -218,7 +229,7 @@ function ExerciseDisplay(props) {
     for (var i = 0; i < select.options.length; i++) {
       option = select.options[i];
 
-      if (option.value == temp[1]) {
+      if (option.value === temp[1]) {
         option.setAttribute('selected', true);
 
         break;
@@ -259,7 +270,6 @@ function ExerciseDisplay(props) {
         document.getElementById("exercisetable").innerHTML = option
 
         for (let i of exercises) {
-          const element = document.getElementById(i.id).onclick = showeditform
           document.getElementById(('remove' + '#' + String(i.id))).onclick = removeExercise
         }
       })
@@ -327,7 +337,7 @@ let updatex = {}
 function UpdateExercise(props) {
 
   for (let i of exercises) {
-    if (i.id == props.id) {
+    if (i.id === props.id) {
       updatex = i
     }
   }
@@ -355,7 +365,7 @@ function UpdateExercise(props) {
     updatelist['id'] = updatex.id
     updatelist['name'] = updatex.name
 
-    if (updateExercise.description == '') {
+    if (updateExercise.description === '') {
       updatelist['description'] = updatex.description
 
     }
@@ -454,7 +464,7 @@ const Tracking = () => {
       <div className='container'>
         <div className='row'>
 
-          <Card className="text-black" style={{ backgroundColor: "rgb(207, 117, 249)" }}>
+        <Card className="text-black" style={{ backgroundColor: "rgb(207, 117, 249)" }} data-aos="fade-up" data-aos-delay="200">
             <Card.Img src={avatar03} alt="Card image" />
             <Card.ImgOverlay>
               <Card.Title style={{ marginTop: '20px', fontSize: '20px', textAlign: 'right', marginRight: '20px' }}>Transform Yourself</Card.Title>
@@ -471,14 +481,14 @@ const Tracking = () => {
           </Card>
         </div>
         <div className='row'>
-          <Card className="text-black" style={{ backgroundColor: "rgb(207, 117, 249)" }}>
+        <Card className="text-black" style={{ backgroundColor: "rgb(207, 117, 249)" }} data-aos="fade-up" data-aos-delay="200">
             <Card.Img src={avatar01} alt="Card image" />
             <Card.ImgOverlay>
               <Card.Title style={{ marginTop: '20px', fontSize: '20px', textAlign: 'left', marginLeft: '20px' }}>Redefine Yourself</Card.Title>
               <Card.Text style={{ fontSize: '20px', textAlign: 'left', marginLeft: '20px' }}>
                 "Customize Your Workout:<br /> Delete and Refine Your Exercise Selections!"
               </Card.Text>
-              <Card.Text style={{ textAlign: 'left', marginTop: '50px', marginLeft: '20px' }}><Button variant="primary" onClick={() => setLgShow(true)}>Update and Delete</Button>
+              <Card.Text style={{ textAlign: 'left', marginTop: '50px', marginLeft: '20px' }}><Button variant="primary" onClick={() => setLgShow(true)}>Customize!</Button>
                 <ExerciseDisplay
                   show={lgShow}
                   onHide={() => { setLgShow(false); decount() }}
