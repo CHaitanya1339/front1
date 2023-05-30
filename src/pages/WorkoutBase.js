@@ -83,7 +83,7 @@ const WorkoutBase = () => {
   
   const deleteWorkout = async (workoutId) => {
     try {
-      await axios.delete(`http://localhost:8081/users/${uid}/workouts/${workoutId}`);
+      await axios.delete(`http://localhost:8081/workouts/${workoutId}`);
       setAllWorkouts(allWorkouts.filter((workout) => workout.id !== workoutId));
       alert('Workout Deleted Successfully');
     } catch (error) {
@@ -239,7 +239,7 @@ return (
       </Modal.Header>
       <Modal.Body>
         {allWorkouts.length === 0 ? (
-          <p>No workouts found.</p>
+          <p>No workouts found. Start working out {user.name} !</p>
         ) : (
           <Table className="table table-hover">
             <thead className="table-light">
@@ -274,7 +274,7 @@ return (
       </Modal.Header>
       <Modal.Body>
         {allWorkouts.length === 0 ? (
-          <p>No workouts found.</p>
+          <p>No workouts found. Start working out {user.name} !</p>
         ) : (
           <Table className="table table-hover">
             <thead className="table-light">
