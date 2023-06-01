@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Button, Card, Modal, Table } from 'react-bootstrap';
 import axios from 'axios';
 import Navbar from '../layout/Navbar';
-import avatar02 from "../assets/img/wb3.png";
-import avatar01 from "../assets/img/wb2.png";
-import avatar03 from "../assets/img/wb1.png";
+import gymVideo1 from '../assets/vid/gym.mp4';
+import gymVideo2 from '../assets/vid/gym1.mp4';
 
 const WorkoutBase = () => {
   const [showModal, setShowModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showFormModal, setShowFormModal] = useState(false);
   const [allWorkouts, setAllWorkouts] = useState([]);
+
   const dic = {
     "Cardiovascular Workouts": "1",
     "Strength Training": "2",
@@ -34,9 +33,6 @@ const WorkoutBase = () => {
     setShowModal(!showModal);
   };
 
-  const handleUpdateModal = () => {
-    setShowUpdateModal(!showUpdateModal);
-  };
 
   const handleFormModal = () => {
     setShowFormModal(!showFormModal);
@@ -160,114 +156,59 @@ const WorkoutForm = () => {
   );
 };
 
-return (
-  <div>
-    <header style={{ marginTop: '10px' }}>
-      <Navbar />
-    </header>
-    <div className="container">
-      <div className="row">
-        <div className="col">
-          <Card style={{ width: '18rem', border: '2px solid rgb(207, 117, 249)' }}>
-            <Card.Img variant="top" src={avatar03} />
-            <Card.Body>
-              <Card.Title>Craft Your Fitness Journey</Card.Title>
-              <Card.Text>
-                "Create your personalized fitness journey with ease. Add a workout and take a step towards a healthier you!"
-              </Card.Text>
-              <Button variant="primary" onClick={handleFormModal}>
-                Add a Workout
-              </Button>
-            </Card.Body>
-          </Card>
-        </div>
-        <div className="col">
-          <Card style={{ width: '18rem', border: '2px solid rgb(207, 117, 249)' }}>
-            <Card.Img variant="top" src={avatar01} />
-            <Card.Body>
-              <Card.Title>Unveil Your Workout Gallery</Card.Title>
-              <Card.Text>
-                "Stay on top of your fitness game with our comprehensive workout tracking. Show a workout and get ready to crush your goals!"
-              </Card.Text>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  fetchWorkouts();
-                  handleModal();
-                }}
-              >
-                Show All Workouts
-              </Button>
-            </Card.Body>
-          </Card>
-        </div>
-        <div className="col">
-          <Card
-            name="card1"
-            id="card1"
-            className="card1"
-            style={{ width: '18rem', border: '2px solid rgb(207, 117, 249)' }}
-          >
-            <Card.Img variant="top" src={avatar02} />
-            <Card.Body>
-              <Card.Title>Refine, Renew, and Reimagine</Card.Title>
-              <Card.Text>
-                "Flexibility is key to achieving your fitness targets. Update and delete workouts effortlessly to stay on track!"
-              </Card.Text>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  handleUpdateModal();
-                }}
-              >
-                Update and Delete
-              </Button>
-            </Card.Body>
-          </Card>
-        </div>
-      </div>
-    </div>
 
+return (
+  <>
+  <div>
+  <header style={{ marginTop: '10px' }}>
+    <Navbar />
+  </header>
+  <div className="container">
+  <div
+          className="row"
+        >
+    <Card className="text-black" style={{ backgroundColor: "transparent" }}>
+    <video src={gymVideo1} autoPlay loop muted />
+      <Card.ImgOverlay>
+        <Card.Title style={{ marginTop: '20px', fontSize: '20px', textAlign: 'right', marginRight: '20px', color: 'white' }}>Craft Your Fitness Journey</Card.Title>
+        <Card.Text style={{ fontSize: '20px', textAlign: 'right', marginRight: '20px', color: 'white' }}>
+          "Create your personalized fitness journey with ease. <br /> Add a workout and take a step towards a healthier you!"
+        </Card.Text>
+        <Card.Text style={{ textAlign: 'right', marginTop: '50px', marginRight: '20px' }}><Button variant="primary" onClick={handleFormModal}>
+                  Add a Workout
+                </Button>
+        </Card.Text>
+      </Card.ImgOverlay>
+    </Card>
+    </div>
+      <div className='row'>
+    <Card className="text-black" style={{ backgroundColor: "transparent" }}>
+    <video src={gymVideo2} autoPlay loop muted />
+      <Card.ImgOverlay>
+        <Card.Title style={{ marginTop: '20px', fontSize: '20px', textAlign: 'left', marginLeft: '20px', color: 'white' }}>Unveil Your Workout Gallery</Card.Title>
+        <Card.Text style={{ fontSize: '20px', textAlign: 'left', marginLeft: '20px', color: 'white' }}>
+          "Stay on top of your fitness game with our comprehensive workout tracking. <br /> 
+        </Card.Text>
+        <Card.Text style={{ textAlign: 'left', marginTop: '50px', marginLeft: '20px' }}>                <Button
+                  variant="primary"
+                  onClick={() => {
+                    fetchWorkouts();
+                    handleModal();
+                  }}
+                >
+                  Show All Workouts
+                </Button>
+        </Card.Text>
+      </Card.ImgOverlay>
+    </Card>
+  </div>
+    </div>
+  </div>
     <Modal
       size="xl"
       aria-labelledby="example-modal-sizes-title-lg"
       show={showModal}
       onHide={handleModal}
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="example-modal-sizes-title-lg">All Workouts</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {allWorkouts.length === 0 ? (
-          <p>No workouts found. Start working out {user.name} !</p>
-        ) : (
-          <Table className="table table-hover">
-            <thead className="table-light">
-              <tr>
-                <th>Date</th>
-                <th>Duration (minutes)</th>
-                <th>Type of Workout</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allWorkouts.map((workout) => (
-                <tr key={workout.id}>
-                  <td>{workout.date}</td>
-                  <td>{workout.duration}</td>
-                  <td>{workout.notes}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
-      </Modal.Body>
-    </Modal>
-
-    <Modal
-      size="xl"
-      aria-labelledby="example-modal-sizes-title-lg"
-      show={showUpdateModal}
-      onHide={handleUpdateModal}
     >
       <Modal.Header closeButton>
         <Modal.Title id="example-modal-sizes-title-lg">All Workouts</Modal.Title>
@@ -291,16 +232,12 @@ return (
                   <td>{workout.date}</td>
                   <td>{workout.duration}</td>
                   <td>{workout.notes}</td>
-                  <td>
-                    <button className="btn btn-info">Update</button>
-                    {' '}
-                    <button
+                  <td><button
                       className="btn btn-danger"
                       onClick={() => deleteWorkout(workout.id)}
                     >
                       Delete
-                    </button>
-                  </td>
+                    </button></td>
                 </tr>
               ))}
             </tbody>
@@ -308,6 +245,7 @@ return (
         )}
       </Modal.Body>
     </Modal>
+
 
     <Modal show={showFormModal} onHide={handleFormModal}>
       <Modal.Header closeButton>
@@ -317,7 +255,7 @@ return (
         <WorkoutForm />
       </Modal.Body>
     </Modal>
-  </div>
+  </>
 );
 };
 
