@@ -12,7 +12,7 @@ const Footer = () => {
             <div className='logo'>
               <div className='logo_img'>
                 <img src={logo} alt='' />
-                <h2>SweatSync</h2>
+                <h2>FitPortal</h2>
               </div>
             </div>
 

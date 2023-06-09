@@ -2,10 +2,10 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../layout/Header';
-
 const Register = () => {
 
   let navigate = useNavigate()
+  const [validated, setValidated] = useState(false);
 
   const [user, setUser] = useState({
     name: "",
@@ -17,27 +17,104 @@ const Register = () => {
     gender: "",
   });
 
+  const [pass, setPass] = useState({
+    cpass: "",
+  })
+
   const { name, email } = user
 
   const onInputChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
+  const onInputChange2 = (e) => {
+    setPass({ ...pass, [e.target.name]: e.target.value })
+
+    if (user.password === e.target.value) {
+      document.getElementById("cpass").classList.remove('is-invalid')
+      document.getElementById("cpass").classList.add('is-valid')
+    }
+    else {
+      document.getElementById("cpass").classList.remove('is-valid')
+      document.getElementById("cpass").classList.add('is-invalid')
+    }
+
+    if(document.getElementById("cpass").classList.contains('is-valid') & document.getElementById("email").classList.contains('is-valid') & document.getElementById("password").classList.contains('is-valid') ){
+      setValidated(true)
+    }
+    else{
+      setValidated(false)
+    }
+  };
 
   const onSubmit = async (e) => {
     alert("User is Succesfully Registered")
     e.preventDefault();
-    await axios.post("http://localhost:8081/users", user)
-    navigate("/Login");
+    if (validated) {
+      document.getElementById("error").hidden = true;
+      await axios.post("http://localhost:8081/users", user)
+      navigate("/Login");
+    }
+    else {
+      document.getElementById("error").hidden = false;
+    }
   }
+  const validate = (e) => {
+    var p = e.target.value
+    
+    if (e.target.name === 'password') {
+      var passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,20}$/;
+      if (p.match(passw)) {
+        document.getElementById("passerror").hidden = true;
+        document.getElementById("password").classList.remove('is-invalid')
+        document.getElementById("password").classList.add('is-valid')
+
+      }
+      else {
+        document.getElementById("passerror").hidden = false;
+        document.getElementById("password").classList.remove('is-valid')
+        document.getElementById("password").classList.add('is-invalid');
+      }
+    }
+    else if (e.target.name === 'email') {
+      var passw1 = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      if (p.match(passw1)) {
+        document.getElementById("emailerror").hidden = true;
+        document.getElementById("email").classList.remove('is-invalid');
+        document.getElementById("email").classList.add('is-valid');
+
+      }
+      else {
+        document.getElementById("emailerror").hidden = false;
+        document.getElementById("email").classList.remove('is-valid');
+        document.getElementById("email").classList.add('is-invalid');
+      }
+    }
+    if (pass.cpass === e.target.value) {
+      document.getElementById("cpass").classList.remove('is-invalid')
+      document.getElementById("cpass").classList.add('is-valid')
+    }
+    else {
+      document.getElementById("cpass").classList.remove('is-valid')
+      document.getElementById("cpass").classList.add('is-invalid')
+    }
+
+
+    if(document.getElementById("cpass").classList.contains('is-valid') & document.getElementById("email").classList.contains('is-valid') & document.getElementById("password").classList.contains('is-valid') ){
+      setValidated(true)
+    }
+    else{
+      setValidated(false)
+    }
+  }
+
   return (
-    <div>
+    <div >
       <Header />
       <div className='container'>
         <div className="row">
           <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
             <h2 className="text-center m-4">Register User</h2>
             <form onSubmit={(e) => onSubmit(e)}>
-
               <div className="mb-3">
                 <label htmlFor="Name" className="form-label">
                   Name
@@ -49,6 +126,7 @@ const Register = () => {
                   name="name"
                   value={name}
                   onChange={(e) => onInputChange(e)}
+                  required
                 />
               </div>
 
@@ -62,23 +140,13 @@ const Register = () => {
                   className="form-control"
                   placeholder="Enter your Email Address"
                   name="email"
+                  id="email"
                   value={email}
-                  onChange={(e) => onInputChange(e)}
+                  onChange={(e) => { onInputChange(e); validate(e) }}
+                  required
                 />
-              </div>
+                <div id='emailerror' className='emailerror' style={{ fontSize: '12px', color: 'red' }} hidden={true}>Password enter a valid email address ! </div>
 
-              <div className="mb-3">
-                <label htmlFor="Password" className="form-label">
-                  Password
-                </label>
-                <input
-                  type={"password"}
-                  className="form-control"
-                  placeholder="Enter your Password"
-                  name="password"
-                  value={user.password}
-                  onChange={(e) => onInputChange(e)}
-                />
               </div>
 
               <div className="mb-3">
@@ -92,6 +160,7 @@ const Register = () => {
                   name="height"
                   value={user.height}
                   onChange={(e) => onInputChange(e)}
+                  required
                 />
               </div>
 
@@ -106,6 +175,7 @@ const Register = () => {
                   name="weight"
                   value={user.weight}
                   onChange={(e) => onInputChange(e)}
+                  required
                 />
               </div>
 
@@ -120,6 +190,7 @@ const Register = () => {
                   name="age"
                   value={user.age}
                   onChange={(e) => onInputChange(e)}
+                  required
                 />
               </div>
 
@@ -132,6 +203,7 @@ const Register = () => {
                   name="gender"
                   value={user.gender}
                   onChange={(e) => onInputChange(e)}
+                  required
                 >
                   <option value="">--Select Gender--</option>
                   <option value="male">Male</option>
@@ -140,9 +212,45 @@ const Register = () => {
                 </select>
               </div>
 
+              <div className="mb-3">
+                <label htmlFor="Password" className="form-label">
+                  Password
+                </label>
+                <input
+                  type={"password"}
+                  className="form-control"
+                  placeholder="Enter your Password"
+                  name="password"
+                  id='password'
+                  value={user.password}
+                  onChange={(e) => { onInputChange(e); validate(e) }}
+                  required
+                />
+                <div id='passerror' className='passerror' style={{ fontSize: '12px', color: 'red' }} hidden={true}>Password Should contain at least 8 Character<br/>
+                Password should contain at least:<br/> -: One Uppercase and One Lowercase Alphabate<br/>-: One Special Character <br/> -: One Numeric Character
+                </div>
+              </div>
 
+              <div className="mb-3">
+                <label htmlFor="Password" className="form-label">
+                  Confirm Password
+                </label>
+                <input
+                  type={"text"}
+                  className="form-control"
+                  placeholder="Enter your Password"
+                  name="cpass"
+                  id='cpass'
+                  value={pass.cpass}
+                  onChange={(e) => onInputChange2(e)}
+                  required
 
+                />
+              </div>
 
+              <div id='error' className='erro' style={{ fontSize: '15px', color: 'red' }} hidden={true}>
+                Please complete all the sections to register !
+              </div>
 
               <button type="submit" className="btn btn-outline-primary">
                 Submit
@@ -150,11 +258,13 @@ const Register = () => {
               <Link className="btn btn-outline-danger mx-2" to="/">
                 Cancel
               </Link>
+
+              
             </form>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 

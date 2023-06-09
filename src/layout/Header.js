@@ -64,7 +64,7 @@ const Header = () => {
             <div className='logo_img'>
               <img src={logo} alt='' />
             </div>
-            <h2>SweatSync</h2>
+            <h2>FitPortal</h2>
           </div>
           </Link>
 
