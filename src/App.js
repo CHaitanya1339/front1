@@ -11,7 +11,7 @@ import Creator from './pages/Creator';
 import UserDashboard from './pages/UserDashboard';
 import UpdateProfile from './pages/Updateprofile';
 import WorkoutForm from './pages/WorkoutForm';
-import Graph from './pages/Graph';
+import WorkoutTrack from './pages/WorkoutTrack';
 import WorkoutBase from './pages/WorkoutBase';
 
 
@@ -33,7 +33,7 @@ function App() {
           <Route exact path='/workout-plan-creator' element={<Creator />} />
           <Route exact path='/user-dashboard' element={<UserDashboard />} />
           <Route exact path='/WorkoutBase' element={<WorkoutBase />} />
-          <Route exact path='/workout-track' element={<Graph />} />
+          <Route exact path='/workout-track' element={<WorkoutTrack />} />
           
         </Routes>
       </Router>
