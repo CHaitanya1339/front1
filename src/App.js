@@ -13,6 +13,7 @@ import UpdateProfile from './pages/Updateprofile';
 import WorkoutForm from './pages/WorkoutForm';
 import Graph from './pages/Graph';
 import WorkoutBase from './pages/WorkoutBase';
+import ViewGoals from './pages/ViewGoals';
 
 
 function App() {
@@ -30,6 +31,8 @@ function App() {
           <Route exact path='/workout-history' element={<History />} />
           <Route exact path='/exercise-tracking' element={<Tracking />} />
           <Route exact path='/goal-setting' element={<Setting />} />
+          <Route exact path='/view-goals' element={<ViewGoals />} />
+          <Route exact path='/update-goal/:id' element={<Setting />} />
           <Route exact path='/workout-plan-creator' element={<Creator />} />
           <Route exact path='/user-dashboard' element={<UserDashboard />} />
           <Route exact path='/WorkoutBase' element={<WorkoutBase />} />
