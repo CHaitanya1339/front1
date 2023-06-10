@@ -42,16 +42,7 @@ const Navbar = () => {
               <div className="logo_img">
                 <img src={logo} alt="" />
               </div>
-              <h2>FitPortal</h2>
-            </div>
-
-            <div className="nav_right">
-              <Link className="btn" to="/workout-track">
-                Workout Track
-              </Link>
-              <span className="mobile_menu">
-                <i className="ri-menu-line"></i>
-              </span>
+              <h2>SweatSync</h2>
             </div>
 
             <div className="nav_right">
@@ -75,6 +66,15 @@ const Navbar = () => {
             <div className="nav_right">
               <Link className="btn" to="/goal-setting">
                 Goal Setting
+              </Link>
+              <span className="mobile_menu">
+                <i className="ri-menu-line"></i>
+              </span>
+            </div>
+
+            <div className="nav_right">
+              <Link className="btn" to="/view-goals">
+                View Goals
               </Link>
               <span className="mobile_menu">
                 <i className="ri-menu-line"></i>
