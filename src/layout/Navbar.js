@@ -46,6 +46,15 @@ const Navbar = () => {
             </div>
 
             <div className="nav_right">
+              <Link className="btn" to="/workout-track">
+                Workout Tracking
+              </Link>
+              <span className="mobile_menu">
+                <i className="ri-menu-line"></i>
+              </span>
+            </div>
+
+            <div className="nav_right">
               <Link className="btn" to="/workout-history">
                 Workout History
               </Link>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import Navbar from '../layout/Navbar';
 import axios from 'axios';
@@ -8,6 +9,8 @@ const History = () => {
   const [workoutData, setWorkoutData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [loading, setLoading] = useState(true);
+
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [updatedWorkout, setUpdatedWorkout] = useState({
@@ -16,6 +19,7 @@ const History = () => {
     duration: '',
     notes: ''
   });
+  
 
   useEffect(() => {
     const fetchWorkoutData = async () => {
@@ -23,9 +27,10 @@ const History = () => {
         const user = JSON.parse(localStorage.getItem('user'));
         const id = user.id;
         const response = await axios.get(
-          `https://8080-deadefebdddbeefbebfbcddfeaeaadbdbabf.project.examly.io/users/${id}/workouts`
+          `http://localhost:8081/users/${id}/workouts`
         );
         setWorkoutData(response.data);
+        setLoading(false); 
       } catch (error) {
         console.log(error);
       }
@@ -46,6 +51,8 @@ const History = () => {
     setFilteredData(filtered);
   }, [selectedDate, workoutData]);
 
+
+
   const handleDateChange = (e) => {
     setSelectedDate(new Date(e.target.value));
   };
@@ -63,7 +70,7 @@ const History = () => {
 
   const handleDeleteWorkout = (workoutId) => {
     axios
-      .delete(`https://8080-deadefebdddbeefbebfbcddfeaeaadbdbabf.project.examly.io/workouts/${workoutId}`)
+      .delete(`http://localhost:8081/workouts/${workoutId}`)
       .then((res) => {
         const updatedWorkoutData = filteredData.filter((item) => item.id !== workoutId);
         setFilteredData(updatedWorkoutData);
@@ -76,25 +83,67 @@ const History = () => {
       });
   };
   
-
   const handleUpdate = async (event) => {
     event.preventDefault();
-
+  
     try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const userId = user && user.id;
+  
+      const updatedWorkoutWithUserId = {
+        ...updatedWorkout,
+        userId: userId
+      };
+  
       const response = await axios.put(
-        `https://8080-deadefebdddbeefbebfbcddfeaeaadbdbabf.project.examly.io/workouts/${updatedWorkout.id}`,
-        updatedWorkout
+        `http://localhost:8081/workouts/${updatedWorkout.id}`,
+        { ...updatedWorkout, userId }
       );
+  
       const updatedWorkoutData = workoutData.map((item) =>
         item.id === updatedWorkout.id ? response.data : item
       );
+  
       setWorkoutData(updatedWorkoutData);
+  
+      const updatedFilteredData = filteredData.map((item) =>
+        item.id === updatedWorkout.id ? response.data : item
+      );
+  
+      setFilteredData(updatedFilteredData);
+  
       alert('Workout Updated Successfully');
+      console.log("sent successfully");
       handleCloseModal();
     } catch (error) {
       console.error(error);
     }
   };
+  
+  
+
+  // const handleUpdate = async (event) => {
+  //   event.preventDefault();
+
+  //   try {
+  //     const response = await axios.put(
+  //       `http://localhost:8081/workouts/${updatedWorkout.id}`,
+  //       updatedWorkout
+  //     );
+  //     const updatedWorkoutData = workoutData.map((item) =>
+  //       item.id === updatedWorkout.id ? response.data : item
+  //     );
+  //     setWorkoutData(updatedWorkoutData);
+  //     const updatedFilteredData = filteredData.map((item) =>
+  //     item.id === updatedWorkout.id ? response.data : item
+  //   );
+  //   setFilteredData(updatedFilteredData);
+  //     alert('Workout Updated Successfully');
+  //     handleCloseModal();
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const workoutNames = [
     'Cardiovascular Workouts',

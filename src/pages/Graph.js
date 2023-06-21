@@ -14,7 +14,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import faker from 'faker';
+//import faker from 'faker';
 import Chart from 'chart.js/auto';
 import { getRelativePosition } from 'chart.js/helpers';
 
