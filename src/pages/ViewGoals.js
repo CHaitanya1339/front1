@@ -15,11 +15,11 @@ const ViewGoals = () => {
   },[])
 
   for(let i=0;i<goals.length;i++){
-    if(goals[i]['user_id']===user['id']){
+    if(goals[i]['user_id']===user.id && goals[i]['approval']===true){
       updatedGoals.push(goals[i]);
     }
   }
-  // console.log(updatedGoals);
+  console.log(updatedGoals);
   
   const handleRemoveGoal = async (goalId) => {
     try {
@@ -44,7 +44,7 @@ const ViewGoals = () => {
     </div>
     <div class="container">
       <h2>Fitness Goals List</h2>
-      {goals.length === 0 ? (
+      {updatedGoals.length === 0 ? (
         <p>No goals found.</p>
       ) : (
       <table class="table table-striped table-hover table-bordered">
@@ -53,8 +53,8 @@ const ViewGoals = () => {
             <th>S.No</th>
             <th scope="col">Goal Name</th>
             <th scope="col">Description</th>
-            <th scope="col">Date to acheive</th>
-            <th scope="col">Progress</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Target Weight</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
@@ -64,17 +64,18 @@ const ViewGoals = () => {
               <th scope="row">{index+1}</th>
               <td>{goal.goalName}</td>
               <td>{goal.description}</td>
-              <td>{goal.date}</td>
-              <td>
+              <td>{goal.duration}</td>
+              <td>{goal.targetWeight}</td>
+              {/* <td>
               <input
                   type="range"
                   min={0}
                   max={100}
                   value={goal.progress}
               />{goal.progress}%
-              </td>
+              </td> */}
               <td>
-                <Link to={`/update-goal/${goal.id}`} class="btn btn-info" role="button">update</Link>
+                {/* <Link to={`/update-goal/${goal.id}`} class="btn btn-info" role="button">update</Link> */}
                 <button onClick={() => handleRemoveGoal(goal.id)} class="btn btn-danger">remove</button>
               </td>
             </tr>
@@ -88,3 +89,4 @@ const ViewGoals = () => {
 
 
 export default ViewGoals;
+

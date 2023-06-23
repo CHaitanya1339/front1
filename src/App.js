@@ -14,6 +14,7 @@ import WorkoutForm from './pages/WorkoutForm';
 import WorkoutTrack from './pages/WorkoutTrack';
 import WorkoutBase from './pages/WorkoutBase';
 import ViewGoals from './pages/ViewGoals';
+import GoalApproval from './admin/GoalApproval';
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <Route exact path='/user-dashboard' element={<UserDashboard />} />
           <Route exact path='/WorkoutBase' element={<WorkoutBase />} />
           <Route exact path='/workout-track' element={<WorkoutTrack />} />
+          <Route exact path='/goal-approval' element={<GoalApproval />} />
           
         </Routes>
       </Router>

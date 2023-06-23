@@ -7,8 +7,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 const Setting = () => {
   const [goalName, setGoal] = useState('');
   const [description, setDescription] = useState('');
-  const [progress, setProgress] = useState(0);
-  const [date, setDate] = useState('');
+  const [targetWeight, setTargetWeight] = useState(0);
+  const [duration, setDuration] = useState('');
 
   const {id} = useParams();
 
@@ -16,9 +16,7 @@ const Setting = () => {
   
   const user = JSON.parse(localStorage.getItem('user'));
 
-  // if(id){
-  //   document.getElementById("progress").hidden = false;
-  // }
+
 
   const handleGoalChange = (e) => {
     setGoal(e.target.value);
@@ -28,18 +26,18 @@ const Setting = () => {
     setDescription(e.target.value);
   };
 
-  const handleDateChange = (e) => {
-    setDate(e.target.value);
+  const handleDurationChange = (e) => {
+    setDuration(e.target.value);
   };
 
-  const handleProgressChange = (e) => {
-    setProgress(e.target.value);
+  const handleTargetWeightChange = (e) => {
+    setTargetWeight(e.target.value);
   };
 
   const handleSubmit =(e) => {
     e.preventDefault();
     const user_id = user.id;
-    const goalItem = {goalName,description,progress,user_id,date};
+    const goalItem = {description,duration,goalName,user_id,targetWeight};
     console.log(goalItem);
     if(id){
       alert("Goal updated Successfully.");
@@ -47,11 +45,14 @@ const Setting = () => {
       .then(navigate("/view-goals"));
     }
     else{
-      alert("New Goal Created.");
+      alert("Your goal has been submitted for admin approval.");
+      console.log(goalItem);
       axios.post("http://localhost:8080/goal",goalItem)
-      .then(navigate("/view-goals"));
+      //.then(navigate("/view-goals"));
       setGoal('');
-      setDate('');
+      setDescription('');
+      setDuration('');
+      setTargetWeight(0);
     }
   };
 
@@ -60,8 +61,8 @@ const Setting = () => {
     .then((response) => {
       setGoal(response.data.goalName)
       setDescription(response.data.description)
-      setDate(response.data.date)
-      setProgress(response.data.progress)
+      setDuration(response.data.duration)
+      setTargetWeight(response.data.targetWeight)
     }).catch(error => {
             console.log(error)
         })
@@ -81,47 +82,51 @@ const Setting = () => {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Goal:</label>
-          <input
-            type="text"
-            id="goal"
-            value={goalName}
-            onChange={handleGoalChange}
-            className="form-control"
-            placeholder='Enter your goal..'
-          />
+          <select value={goalName} onChange={handleGoalChange} className="drop-down">
+          <option value="">Select a goal</option>
+          <option value="weight gain">Weight Gain</option>
+          <option value="weight loss">Weight Loss</option>
+        </select>
         </div>
-        <div className="form-group">
-          <label>Description:</label>
+        <div className="form-mem">
+          <label className="description">Description:</label>
+          <div className="form-con">
           <input
             type="text-area"
-            id="description"
             value={description}
             onChange={handleDescriptionChange}
-            className="form-control"
-            placeholder='Description for your goal..'
-          />
+            className='form-tex'
+            placeholder='Enter description for your goal..'
+          /></div>
         </div>
         <div className="form-group">
-          <label>Date:</label>
-          <input
-            type="date"
-            id="date"
-            value={date}
-            onChange={handleDateChange}
-            className="form-control"
-          />
+          <label>Duration:</label>
+          <select value={duration} onChange={handleDurationChange} className="drop-down">
+            <option>select the duration</option>
+            <option value="1 month">1 month</option>
+            <option value="2 months">2 months</option>
+            <option value="3 months">3 months</option>
+            <option value="4 months">4 months</option>
+            <option value="5 months">5 months</option>
+            <option value="6 months">6 months</option>
+            <option value="7 months">7 months</option>
+            <option value="8 months">8 months</option>
+            <option value="9 months">9 months</option>
+            <option value="10 months">10 months</option>
+            <option value="11 months">11 months</option>
+            <option value="12 months">12 months</option>
+          </select>
         </div>
-        <div className="form-group" id='progress_div' >
-          <label>Progress:</label>
+        <div className="form-mem" >
+          <label className='targetWeight'>Target Weight:</label>
+          <div className="form-con">
           <input
             type="number"
-            id="progress"
             min="0"
-            max="100"
-            value={progress}
-            onChange={handleProgressChange}
-            className="form-control"
-          />
+            value={targetWeight}
+            onChange={handleTargetWeightChange}
+            className='form-tex'
+          /></div>
         </div>
         <button type="submit" className="btn btn-primary">Add Goal</button>
       </form>
@@ -131,3 +136,4 @@ const Setting = () => {
 };
 
 export default Setting;
+
